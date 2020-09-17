@@ -25,7 +25,7 @@ function showServerErrors(err) {
             alert('Server: ' + error);
         });
     } else {
-        alert('Server: ' + error);
+        alert('Server: ' + err);
     }
 }
 $(document).ready(function () {
@@ -39,7 +39,6 @@ $(document).ready(function () {
         } else {
             showError('#Email');
         }
-        console.log(typeof (password));
         if (typeof (password) === 'string') {
             password = password.trim();
             if (password.length < 8) {
@@ -67,6 +66,8 @@ $(document).ready(function () {
         fetch("http://localhost:3000/api/login", requestOptions)
             .then(response => response.json())
             .then(result => {
+                console.log(result);
+
                 if (!result.completed) {
                     showServerErrors(result.errors);
                 } else {

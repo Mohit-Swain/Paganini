@@ -11,9 +11,12 @@ exports.postLogin = function (req, res) {
         email: email,
         password: password
     }).then((result) => {
-        var decode = jwt.decode(result.token, process.env.SECRET_KEY);
-
-        return res.json(result);
+        var decoded = jwt.verify(result.token, process.env.SECRET_KEY);
+        req.session.isLoggedIn = true;
+        req.session.token = result.token;
+        req.session.name = result.name;
+        req.session.save();
+        res.json(result);
     }).catch((err) => {
         return res.json(err)
     });
@@ -26,10 +29,19 @@ exports.postSignUp = function (req, res) {
     userModel.addUser({
         name: name,
         email: email,
-        password: password
+        password: password,
+        data: []
     }).then((result) => {
         return res.json(result);
     }).catch((err) => {
         return res.json(err)
     });
+}
+
+
+exports.getLogOut = function (req, res) {
+    req.session.isLoggedIn = false;
+    req.session.name = "";
+    req.session.token = "";
+    res.redirect('/login');
 }

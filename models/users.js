@@ -4,7 +4,6 @@ require('dotenv').config();
 var jwt = require('jsonwebtoken');
 
 const userModel = require('../utils/schema/user');
-const dataModel = require('../utils/schema/data');
 
 exports.addUser = function (user) {
     var name = user.name;
@@ -21,7 +20,6 @@ exports.addUser = function (user) {
                 })
             } else {
                 bcrypt.hash(password, 12).then(hashPassword => {
-                    console.log(email);
                     var newUser = new userModel({
                         userName: name,
                         email: email,
@@ -59,14 +57,15 @@ exports.check = function (user) {
                 bcrypt.compare(password, user.password).then(result => {
                     if (result) {
                         var token = jwt.sign({
-                            name: user.userName,
+                            id: user._id,
                             email: user.email
                         }, process.env.SECRET_KEY, {
                             expiresIn: 60 * 60
                         });
                         resolve({
                             completed: true,
-                            token: token
+                            token: token,
+                            name: user.userName
                         });
                     } else {
                         reject({

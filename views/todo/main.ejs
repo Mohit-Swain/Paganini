@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twello</title>
+    <%- include('../includes/head-top'); %>
+    <link rel="stylesheet" href="css/todo.css">
+</head>
+
+<body>
+    <%- include('../includes/nav'); %>
+    <div class="container-fluid">
+
+        <div id="myDIV" class="header">
+            <h2>My To Do List</h2>
+            <div class="row">
+                <input type="text" id="myInput" placeholder="Add a ToDo..." autofocus>
+                <span class=" addBtn">Add</span>
+            </div>
+        </div>
+
+        <ul id="mytodo">
+        </ul>
+
+        <div class="text-center">
+            <button class="btn btn-lg btn-info" id="save">Save</button>
+        </div>
+    </div>
+
+    <%- include('../includes/head-down.ejs') %>
+    <script src="js/todo.js"></script>
+</body>
+
+</html>

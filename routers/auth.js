@@ -6,4 +6,6 @@ authRoutes.post('/login', authControllers.postLogin);
 
 authRoutes.post('/signup', authControllers.postSignUp);
 
+authRoutes.get('/logout', authControllers.getLogOut);
+
 module.exports = authRoutes;

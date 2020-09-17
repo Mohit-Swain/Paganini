@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twello</title>
+    <%- include('../includes/head-top'); %>
+    <link rel="stylesheet" href="css/todo.css">
+</head>
+
+<body>
+    <%- include('../includes/nav'); %>
+    <div class="container-fluid">
+
+        <div id="myDIV" class="header">
+            <h2 class="display-4">My To Do Lists</h2>
+            <!-- <a href="todo?new=true"> -->
+            <!-- <button class="btn btn-lg btn-success" id="save"></button> -->
+            <button type="button" class="btn btn-lg btn-success lead" data-toggle="modal"
+                data-target=".bd-example-modal-lg">Add a new Todo List</button>
+            <!-- </a> -->
+        </div>
+        <!-- Modal -->
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body h4 ">
+                        <div class="form-group">
+                            <label for="title">Write the title of todo list!!</label>
+                            <input type="text" class="form-control" id="title"
+                                placeholder="ex. Todos for my Java Learning" autocomplete="off" required>
+                            <div class="invalid-feedback" id="title-feedback">Client: the title should be at
+                                least 5
+                                cahracters</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="create">Create Todo list</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul id="List">
+
+        </ul>
+    </div>
+
+    <%- include('../includes/head-down.ejs') %>
+    <script>
+        $(document).ready(function () {
+            $('#create').click(function () {
+                let val = $('#title').val().trim();
+                if (val.length <= 5) {
+                    $('#title').addClass('is-invalid');
+                    return;
+                }
+                window.location.replace("http://localhost:3000/todo?new=true&title=" + val);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

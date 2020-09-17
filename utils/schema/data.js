@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var dataSchema = new Schema({
-    plan: [{
+    title: String,
+    todo: [{
         name: String,
-        completed: Boolean
+        done: Boolean
     }],
     expiry: Date,
     isShared: {
@@ -14,7 +15,8 @@ var dataSchema = new Schema({
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     }
 }, {
     timestamps: true

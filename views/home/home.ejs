@@ -12,6 +12,7 @@
 
 <body>
     <%- include('../includes/nav'); %>
+
     <div class="wrapper">
         <section class="hero">
 
@@ -25,10 +26,16 @@
                                 also
                                 says a lot about your business. We are the right office space.</p>
 
+                            <% if (!isLoggedIn) { %>
                             <p class="lead">
                                 <a class="btn btn-primary btn-lg" href="login" role="button">Login</a>
                                 <a class="btn btn-primary btn-lg" href="signup" role="button">SignUp</a>
                             </p>
+                            <% } else { %>
+                            <p class="lead">
+                                <a class="btn btn-primary btn-lg" href="list" role="button">MyTodos</a>
+                            </p>
+                            <% } %>
                         </div>
                     </div>
                 </div>
