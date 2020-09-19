@@ -11,22 +11,25 @@
 
 <body>
     <%- include('../includes/nav'); %>
-    <div class="container-fluid">
+    <div class="todo">
+        <div class="container-fluid">
 
-        <div id="myDIV" class="header">
-            <h2>My To Do List</h2>
-            <div class="row">
-                <input type="text" id="myInput" placeholder="Add a ToDo..." autofocus>
-                <span class=" addBtn">Add</span>
+            <div id="myDIV" class="header">
+                <h2 id="title">My To Do List</h2>
+                <div class="row">
+                    <input type="text" id="myInput" placeholder="Add a ToDo..." autofocus>
+                    <span class=" addBtn">Add</span>
+                </div>
+            </div>
+
+            <ul id="mytodo">
+            </ul>
+
+            <div class="text-center">
+                <button class="btn btn-lg btn-info" id="save">Save</button>
             </div>
         </div>
 
-        <ul id="mytodo">
-        </ul>
-
-        <div class="text-center">
-            <button class="btn btn-lg btn-info" id="save">Save</button>
-        </div>
     </div>
 
     <%- include('../includes/head-down.ejs') %>

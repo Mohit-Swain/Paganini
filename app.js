@@ -58,6 +58,16 @@ app.use('/api', authRouter);
 app.use(homeRouter);
 app.use(profileRouter);
 
+
+app.use((err, req, res, next) => {
+    console.log('*********************************');
+    console.log('error is \n', err);
+    if (err.statusCode === 500) {
+        req.session.isLoggedIn = false;
+    }
+    res.send(err);
+    next();
+})
 const port = process.env.PORT || 3000;
 
 mongoose.connect(url, {

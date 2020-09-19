@@ -11,7 +11,6 @@ exports.postLogin = function (req, res) {
         email: email,
         password: password
     }).then((result) => {
-        var decoded = jwt.verify(result.token, process.env.SECRET_KEY);
         req.session.isLoggedIn = true;
         req.session.token = result.token;
         req.session.name = result.name;

@@ -13,6 +13,10 @@ function showServerErrors(err) {
 function updateList() {
     work.forEach(function (job) {
         var span = $('<span />').addClass('close').text('\u00D7');
+        span.click(function () {
+            $(this).parent().remove();
+            $('#save').prop('disabled', false);
+        })
         console.log(job);
         var list = $('<li>' + job.name + '</li>');
         list.append(span);
@@ -20,6 +24,9 @@ function updateList() {
         if (job.done) {
             list.addClass("checked");
         }
+        list.click(function () {
+            $(this).toggleClass('checked');
+        });
         $('#mytodo').append(list);
     });
 }
@@ -28,14 +35,45 @@ $(document).ready(function () {
     const urlParams = new URLSearchParams(window.location.search);
     const isNew = urlParams.get('new');
     let title = "";
-    console.log(urlParams);
-    if (isNew === 'true') {
+    let id = "";
+    if (isNew === "true") {
         title = urlParams.get('title');
-    } else {
+        $('#title').html(title);
+    } else if (isNew === "false") {
+        id = urlParams.get('id');
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
 
-        // updateList();
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify({
+                todoId: id
+            }),
+            redirect: 'follow'
+        };
+
+        fetch("http://localhost:3000/todo/postGetTodoById", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+
+                if (result.completed === false) {
+                    showServerErrors(result.errors);
+                    if (result.errorCode === 500) {
+                        window.location.replace("http://localhost:3000/api/logout");
+                    }
+                } else {
+                    work = result.result.todo;
+                    updateList();
+                    // window.location.replace("http://localhost:3000/list");
+                }
+            })
+            .catch(error => {
+                console.log('error', error)
+                showServerErrors(error);
+            });
     }
-
     $('#save').prop('disabled', true);
     $('#mytodo li').click(function () {
         $(this).toggleClass('checked');
@@ -58,7 +96,7 @@ $(document).ready(function () {
             $('#myInput').val("");
             $('#save').prop('disabled', false);
         }
-        updateList();
+        // updateList();
     });
 
 
@@ -72,6 +110,7 @@ $(document).ready(function () {
 
 
     $('.close').click(function () {
+        console.log('you clicked on close');
         $(this).parent().remove();
     });
 
@@ -92,7 +131,8 @@ $(document).ready(function () {
             new_work.push(obj);
         }
 
-        if (isNew) {
+        if (isNew === "true") {
+
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
 
@@ -111,10 +151,48 @@ $(document).ready(function () {
                 .then(result => {
                     console.log(result);
 
-                    if (!result.completed) {
+                    if (result.completed === false) {
                         showServerErrors(result.errors);
+                        if (result.errorCode === 500) {
+                            window.location.replace("http://localhost:3000/api/logout");
+                        }
+                    } else {
+                        window.location.replace("http://localhost:3000/list");
+                    }
+                })
+                .catch(error => {
+                    console.log('error', error)
+                    showServerErrors(error);
+                });
+        } else if (isNew === 'false') {
+            // update
+            id = urlParams.get('id');
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var requestOptions = {
+                method: 'PUT',
+                headers: myHeaders,
+                body: JSON.stringify({
+                    todoId: id,
+                    new_todos: new_work
+                }),
+                redirect: 'follow'
+            };
+
+            fetch("http://localhost:3000/todo/updateTodoById", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
+
+                    if (result.completed === false) {
+                        showServerErrors(result.errors);
+                        if (result.errorCode === 500) {
+                            window.location.replace("http://localhost:3000/api/logout");
+                        }
                     } else {
 
+                        // updateList();
                         // window.location.replace("http://localhost:3000/list");
                     }
                 })
@@ -123,6 +201,5 @@ $(document).ready(function () {
                     showServerErrors(error);
                 });
         }
-        console.log(new_work);
     });
 });

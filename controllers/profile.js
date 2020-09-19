@@ -15,38 +15,137 @@ exports.postAddList = function (req, res) {
     console.log('controller');
     var title = req.body.title;
     var work = req.body.work;
-    // middleware
-    try {
-        var decodedToken = jwt.verify(req.session.token, process.env.SECRET_KEY);
-    } catch {
-        res.redirect('/logout');
-        return res.json({
+    var email = req.email;
+    var id = req.userId;
+    var obj = {
+        title: title,
+        work: work,
+        email: email,
+        id: id
+    };
+    todoModel.addNewData(obj)
+        .then((result) => {
+            return res.json({
+                completed: true,
+                result: result
+            })
+        }).catch((err) => {
+            return res.json({
+                completed: false,
+                errors: err
+            })
+        });
+}
+
+
+
+exports.postList = function (req, res) {
+    console.log('controller');
+    var pageNo = req.body.pageNo;
+    var perPage = req.body.perPage;
+    if (!pageNo || !perPage) {
+        res.json({
             completed: false,
-            errors: ['JWT expired']
-        })
+            errors: ['Some values are missing']
+        });
+        return;
     }
-    if (!decodedToken) {
-        return res.json({
-            completed: false,
-            errors: ['JWT invalid']
-        })
-    } else {
-        var obj = {
-            title: title,
-            work: work,
-            decodedToken: decodedToken
-        };
-        todoModel.addNewData(obj)
-            .then((result) => {
-                return res.json({
-                    completed: true,
-                    result: result
-                })
-            }).catch((err) => {
-                return res.json({
-                    completed: false,
-                    errors: err
-                })
-            });
+    var id = req.userId;
+    obj = {
+        pageNo: pageNo,
+        perPage: perPage,
+        id: id
     }
+
+    todoModel.getDataList(obj)
+        .then((result) => {
+            return res.json({
+                completed: true,
+                result: result
+            })
+        }).catch((err) => {
+            return res.json({
+                completed: false,
+                errors: err
+            })
+        });
+}
+
+
+exports.postGetTodoById = function (req, res) {
+    var id = req.userId;
+    var todoId = req.body.todoId;
+    var obj = {
+        id: id,
+        todoId: todoId
+    };
+
+    console.log({
+        id: id,
+        todoId: todoId
+    });
+
+    todoModel.getTodoById(obj)
+        .then((result) => {
+            return res.json({
+                completed: true,
+                result: result
+            })
+        }).catch((err) => {
+            return res.json({
+                completed: false,
+                errors: err
+            })
+        });
+}
+
+
+exports.putUpdateTodo = function (req, res) {
+    var id = req.userId;
+    var todoId = req.body.todoId;
+    var new_todos = req.body.new_todos;
+
+    var obj = {
+        id: id,
+        todoId: todoId,
+        new_todos: new_todos
+    }
+    console.log(obj);
+
+    todoModel.updateById(obj)
+        .then((result) => {
+            return res.json({
+                completed: true,
+                result: result
+            })
+        }).catch((err) => {
+            return res.json({
+                completed: false,
+                errors: err
+            })
+        });
+
+
+}
+
+exports.deleteListById = function (req, res) {
+    var listId = req.body.todoId;
+    var id = req.userId;
+    var obj = {
+        listId: listId,
+        userId: id
+    }
+
+    todoModel.deleteById(obj)
+        .then((result) => {
+            return res.json({
+                completed: true,
+                result: result
+            })
+        }).catch((err) => {
+            return res.json({
+                completed: false,
+                errors: err
+            })
+        });
 }
