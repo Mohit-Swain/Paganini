@@ -59,6 +59,7 @@ exports.postList = function (req, res) {
 
     todoModel.getDataList(obj)
         .then((result) => {
+            // console.log(result);
             return res.json({
                 completed: true,
                 result: result

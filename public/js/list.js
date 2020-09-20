@@ -131,7 +131,7 @@ $(document).ready(function () {
                 showServerErrors(result.errors);
             } else {
                 if (result.result.page > result.result.pages) {
-                    window.location.replace("http://localhost:3000/list?page=" + result.result.pages);
+                    window.location.replace("http://localhost:3000/list?page=" + pageNo);
                     return;
                 }
                 todos = result.result.todos;

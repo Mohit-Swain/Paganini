@@ -7,6 +7,8 @@ const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo')(session);
+const passport = require('passport');
+const user = require('./utils/schema/user');
 require('dotenv').config()
 
 
@@ -15,7 +17,12 @@ require('dotenv').config()
 const homeRouter = require(path.join(__dirname, '/routers', 'home'));
 const authRouter = require(path.join(__dirname, '/routers', 'auth'));
 const profileRouter = require(path.join(__dirname, '/routers', 'profile'));
-const userViewMiddleware = require(path.join(__dirname, '/lib', 'middleware', 'userInView'));
+const oauthRouter = require(path.join(__dirname, '/routers', 'oauth'));
+const mailChimpRouter = require(path.join(__dirname, '/routers', 'mailchimp'));
+const google_outh = require(path.join(__dirname, '/utils', 'middlewares', 'google-oauth'));
+
+
+passport.use(google_outh.config());
 
 const app = express();
 
@@ -45,6 +52,24 @@ app.use(session({
     }
 }));
 
+// Oauth
+const User = require(path.join(__dirname, '/utils', 'schema', 'user'))
+passport.serializeUser(function (user, cb) {
+    console.log('sear');
+    cb(null, user._id);
+});
+
+passport.deserializeUser(function (id, cb) {
+    console.log('desear');
+    User.findById(mongoose.Types.ObjectId(id))
+        .then(user => cb(null, user))
+        .catch(err => cb(err));
+});
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use((req, res, next) => {
     if (!req.session.isLoggedIn) {
         req.session.isLoggedIn = false;
@@ -55,9 +80,10 @@ app.use((req, res, next) => {
 })
 
 app.use('/api', authRouter);
+app.use(oauthRouter);
 app.use(homeRouter);
 app.use(profileRouter);
-
+app.use(mailChimpRouter);
 
 app.use((err, req, res, next) => {
     console.log('*********************************');

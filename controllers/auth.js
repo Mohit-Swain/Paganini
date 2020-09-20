@@ -40,7 +40,9 @@ exports.postSignUp = function (req, res) {
 
 exports.getLogOut = function (req, res) {
     req.session.isLoggedIn = false;
+    req.logout();
     req.session.name = "";
     req.session.token = "";
+    req.session.save();
     res.redirect('/login');
 }

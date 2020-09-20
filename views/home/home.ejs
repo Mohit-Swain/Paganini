@@ -12,7 +12,6 @@
 
 <body>
     <%- include('../includes/nav'); %>
-
     <div class="wrapper">
         <section class="hero">
 
@@ -241,22 +240,23 @@
                     <div class="col-md-10 col-lg-7">
                         <h1 class="h4">Have a question? Get in touch with us!</h1>
 
-                        <form action="" method="">
+                        <form action="/api/send_message" method="POST">
                             <fieldset class="form-group">
                                 <label for="formName">Your Name:</label>
-                                <input id="formName" class="form-control" type="text" placeholder="Your Name" required>
+                                <input id="formName" class="form-control" type="text" name="name"
+                                    placeholder="Your Name">
                             </fieldset>
 
                             <fieldset class="form-group">
                                 <label for="formEmail1">Email address:</label>
-                                <input id="formEmail1" class="form-control" type="email" placeholder="Enter email"
-                                    required>
+                                <input id="formEmail1" class="form-control" type="email" name="email"
+                                    placeholder="Enter email" required>
                             </fieldset>
 
                             <fieldset class="form-group">
                                 <label for="formMessage">Your Message:</label>
-                                <textarea id="formMessage" class="form-control" rows="3" placeholder="Your message"
-                                    required></textarea>
+                                <textarea id="formMessage" class="form-control" rows="3" name="message"
+                                    placeholder="Your message" required></textarea>
                             </fieldset>
 
                             <fieldset class="form-group text-center">

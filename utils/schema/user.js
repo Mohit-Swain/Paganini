@@ -6,6 +6,7 @@ var userSchema = new Schema({
     email: String,
     password: String,
     userName: String,
+    googleId: String,
     data: [{
         type: Schema.Types.ObjectId,
         ref: 'Data'

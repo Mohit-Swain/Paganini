@@ -1,5 +1,12 @@
 work = [];
 
+function myAlertSave() {
+    $("#my-alert").show();
+    setTimeout(function () {
+        $("#my-alert").hide();
+    }, 2000);
+}
+
 function showServerErrors(err) {
     if (Array.isArray(err)) {
         err.forEach(error => {
@@ -16,16 +23,16 @@ function updateList() {
         span.click(function () {
             $(this).parent().remove();
             $('#save').prop('disabled', false);
+
         })
-        console.log(job);
         var list = $('<li>' + job.name + '</li>');
         list.append(span);
-        console.log(list);
         if (job.done) {
             list.addClass("checked");
         }
         list.click(function () {
             $(this).toggleClass('checked');
+            $('#save').prop('disabled', false);
         });
         $('#mytodo').append(list);
     });
@@ -64,6 +71,8 @@ $(document).ready(function () {
                         window.location.replace("http://localhost:3000/api/logout");
                     }
                 } else {
+                    $('#title').html(result.result.title);
+
                     work = result.result.todo;
                     updateList();
                     // window.location.replace("http://localhost:3000/list");
@@ -107,12 +116,11 @@ $(document).ready(function () {
         }
     });
 
+    $('#back').click(function () {
+        window.history.back();
+    })
 
 
-    $('.close').click(function () {
-        console.log('you clicked on close');
-        $(this).parent().remove();
-    });
 
     $('#save').click(function () {
         var new_work = [];
@@ -191,7 +199,7 @@ $(document).ready(function () {
                             window.location.replace("http://localhost:3000/api/logout");
                         }
                     } else {
-
+                        myAlertSave();
                         // updateList();
                         // window.location.replace("http://localhost:3000/list");
                     }
@@ -201,5 +209,7 @@ $(document).ready(function () {
                     showServerErrors(error);
                 });
         }
+        $('#save').prop('disabled', true);
+
     });
 });

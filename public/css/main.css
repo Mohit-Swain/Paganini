@@ -22,10 +22,10 @@ form {
     font-weight: 300;
 }
 
-.btn {
+/* .btn {
     font-size: 14px;
     margin-top: 20px;
-}
+} */
 
 
 .login-form {
@@ -166,4 +166,18 @@ hr {
 
 .btn {
     margin-left: 1rem !important;
+}
+
+#or h6 {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #6c757d;
+    color: #6c757d;
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+}
+
+#or h6 span {
+    background: #fff;
+    padding: 0 10px;
 }

@@ -82,14 +82,14 @@ exports.getDataList = function (obj) {
             }).then(result => {
                 return dataModel.find({
                         user: ObjectId(userId)
-                    }).count()
+                    }).countDocuments()
                     .then((count) => {
                         console.log(count);
                         // reject for pages> page
                         resolve({
                             todos: result,
                             page: pageNo + 1,
-                            pages: Math.ceil(count / perPage)
+                            pages: Math.max(1, Math.ceil(count / perPage))
                         })
                     })
             }).catch(err => {
@@ -107,7 +107,7 @@ exports.getTodoById = function (obj) {
         dataModel.findOne({
                 _id: ObjectId(todoId),
                 user: ObjectId(userId)
-            }).select('todo')
+            }).select(['title', 'todo'])
             .then(data => {
                 resolve(data);
             }).catch(err => {
