@@ -1,6 +1,7 @@
 const userModel = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const user = require('../utils/schema/user');
 require('dotenv').config();
 
 
@@ -45,4 +46,32 @@ exports.getLogOut = function (req, res) {
     req.session.token = "";
     req.session.save();
     res.redirect('/login');
+}
+
+exports.putChangePassword = function (req, res) {
+    var new_password = req.body.new_password;
+    var userId = req.body.userId;
+    var token = req.body.token;
+    var obj = {
+        new_password: new_password,
+        userId: userId,
+        token: token
+    };
+    console.log('controller');
+    userModel.changePassword(obj)
+        .then((result) => {
+            console.log('controller res');
+            console.log(result);
+            return res.json({
+                completed: true,
+                result: result
+            })
+        }).catch((err) => {
+            console.log('controller err ');
+            console.log(err);
+            return res.json({
+                completed: false,
+                errors: err
+            })
+        });;
 }

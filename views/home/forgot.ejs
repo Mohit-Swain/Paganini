@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twello</title>
+    <%- include('../includes/head-top'); %>
+    <!-- <link rel="stylesheet" href="/css/main.css"> -->
+</head>
+
+<body>
+    <%- include('../includes/nav'); %>
+    <div class="global-container overflow-hidden">
+        <div class="card login-form">
+            <div class="card-body">
+                <h3 class="card-title text-center">Forgot Password?</h3>
+                <div class="card-text">
+
+                    <div class="form-group">
+                        <label for="Email" class="required">A recovery mail will be send to the given Email :</label>
+                        <input type="email" class="form-control form-control-sm" id="Email" aria-describedby="emailHelp"
+                            required>
+                        <div class="invalid-feedback" id="Email-feedback">Client: the email should be valid</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block ml-0" id="recovery_mail">Send recovery
+                        mail</button>
+                    <div class="valid-feedback" id="submit-feedback">An Email has been sent to the above email-id</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%- include('../includes/head-down.ejs') %>
+    <script src="js/forgot.js"></script>
+
+</body>
+
+</html>

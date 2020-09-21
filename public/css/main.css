@@ -53,10 +53,10 @@ form {
 
 
 /* Resets */
-hr {
+/* hr {
     margin-left: 0;
     max-width: 40px;
-}
+} */
 
 /* Jumbotron (hero) */
 .jumbotron {
@@ -155,16 +155,16 @@ hr {
 
 .footer a {
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.75);
     transition: color .235s ease-in-out;
 }
 
 .footer a:focus,
 .footer a:hover {
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 1);
 }
 
-.btn {
+.jumbotron-fluid .btn {
     margin-left: 1rem !important;
 }
 
@@ -180,4 +180,9 @@ hr {
 #or h6 span {
     background: #fff;
     padding: 0 10px;
+}
+
+label.required:after {
+    color: red;
+    content: " *";
 }

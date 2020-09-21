@@ -8,4 +8,5 @@ authRoutes.post('/signup', authControllers.postSignUp);
 
 authRoutes.get('/logout', authControllers.getLogOut);
 
+authRoutes.put('/changePassword', authControllers.putChangePassword);
 module.exports = authRoutes;
