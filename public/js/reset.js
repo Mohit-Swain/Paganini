@@ -29,8 +29,8 @@ $(document).ready(function () {
     $('#Reset').click(function (res) {
         let password = $('#password').val() || '';
         let cpassword = $('#confirm-password').val() || '';
-        let token = $('#token').val();
-        let userId = $('#userId').val();
+        let token = $('#token').val().trim();
+        let userId = $('#userId').val().trim();
         if (!token || !userId) {
             alert('Somethings Wrong with the token, and I can feel it');
             return;

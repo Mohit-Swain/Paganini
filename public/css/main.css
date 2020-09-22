@@ -61,7 +61,11 @@ form {
 /* Jumbotron (hero) */
 .jumbotron {
     position: relative;
-    background: url(https://source.unsplash.com/9Y8vxVQN4o4/1920x1080) no-repeat bottom center/cover;
+    background: url(https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1063&q=80);
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: cover;
+
 }
 
 .jumbotron:before {
@@ -103,13 +107,33 @@ form {
 }
 
 .sec-features .feature-icon {
-    max-width: 150px;
+    max-width: 300px;
 }
 
 /* Testimonials */
 .sec-testimonials {
     padding-top: 128px;
     padding-bottom: 128px;
+}
+
+.sec-testimonials {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* Carousel */
@@ -185,4 +209,13 @@ form {
 label.required:after {
     color: red;
     content: " *";
+}
+
+.image-blurred-edge {
+    box-shadow: 5px 0 10px #fff, -5px 0 10px #fff, 0 5px 10px #fff, 0 -5px 10px #fff;
+    border-color: whitesmoke;
+    border-radius: 6px;
+    background-color: white;
+    background-clip: border-box;
+    margin: 15px;
 }
