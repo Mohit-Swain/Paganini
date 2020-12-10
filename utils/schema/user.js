@@ -12,7 +12,12 @@ var userSchema = new Schema({
         ref: 'Data'
     }],
     resetToken: String,
-    resetTokenExpiration: Date
+    resetTokenExpiration: Date,
+    twitterAccount: {
+        type: Schema.Types.ObjectId,
+        ref: 'TwitterAccount',
+        default: null
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);

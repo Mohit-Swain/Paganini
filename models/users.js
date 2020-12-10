@@ -66,7 +66,8 @@ exports.check = function (user) {
                         resolve({
                             completed: true,
                             token: token,
-                            name: user.userName
+                            name: user.userName,
+                            twitterAccountId: user.twitterAccount
                         });
                     } else {
                         reject({

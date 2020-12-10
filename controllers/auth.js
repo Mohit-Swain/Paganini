@@ -2,6 +2,7 @@ const userModel = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const user = require('../utils/schema/user');
+const twitterModel = require('../utils/schema/Twitter_data');
 require('dotenv').config();
 
 
@@ -15,8 +16,36 @@ exports.postLogin = function (req, res) {
         req.session.isLoggedIn = true;
         req.session.token = result.token;
         req.session.name = result.name;
-        req.session.save();
-        res.json(result);
+        req.session.hasTwitter = (result.twitterAccountId ? true : false);
+        if(result.twitterAccountId){
+            twitterModel.findById(result.twitterAccountId)
+            .then((twitInst) => {
+                if(twitInst){
+                    req.session.twitter = twitInst;
+                }
+                else{
+                    req.session.hasTwitter = false;
+                    req.session.twitter = null;
+                }
+                return req.session.save();
+            })
+            .then(() =>{
+                return res.json(result);
+            })
+            .catch(err => {
+                return res.json({
+                    completed: false,
+                    errors: ['twitter account was not set']
+                })
+            })
+        }
+        else{
+            req.session.twitter = null;
+            req.session.save(() => {
+                return res.json(result);
+            });
+        }
+       
     }).catch((err) => {
         return res.json(err)
     });
@@ -42,10 +71,13 @@ exports.postSignUp = function (req, res) {
 exports.getLogOut = function (req, res) {
     req.session.isLoggedIn = false;
     req.logout();
-    req.session.name = "";
-    req.session.token = "";
-    req.session.save();
-    res.redirect('/login');
+    req.session.name = null;
+    req.session.token = null;
+    req.session.hasTwitter = false;
+    req.session.twitter = null;
+    req.session.save(() =>{
+        res.redirect('/login');
+    })
 }
 
 exports.putChangePassword = function (req, res) {

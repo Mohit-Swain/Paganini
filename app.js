@@ -8,7 +8,6 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
-const user = require('./utils/schema/user');
 require('dotenv').config()
 
 
@@ -19,10 +18,11 @@ const authRouter = require(path.join(__dirname, '/routers', 'auth'));
 const profileRouter = require(path.join(__dirname, '/routers', 'profile'));
 const oauthRouter = require(path.join(__dirname, '/routers', 'oauth'));
 const mailChimpRouter = require(path.join(__dirname, '/routers', 'mailchimp'));
-const google_outh = require(path.join(__dirname, '/utils', 'middlewares', 'google-oauth'));
+const google_oauth = require(path.join(__dirname, '/utils', 'middlewares', 'google-oauth'));
+const twitter_oauth = require(path.join(__dirname, '/utils', 'middlewares', 'twitter-oauth'));
 
-
-passport.use(google_outh.config());
+passport.use(google_oauth.config());
+passport.use(twitter_oauth.config());
 
 const app = express();
 
@@ -62,6 +62,7 @@ passport.serializeUser(function (user, cb) {
 passport.deserializeUser(function (id, cb) {
     console.log('desear');
     User.findById(mongoose.Types.ObjectId(id))
+        .select({email : 1,userName : 1 })
         .then(user => cb(null, user))
         .catch(err => cb(err));
 });
@@ -74,8 +75,16 @@ app.use((req, res, next) => {
     if (!req.session.isLoggedIn) {
         req.session.isLoggedIn = false;
     }
+    
+    if(!req.session.hasTwitter){
+        req.session.hasTwitter = false;
+    }
     res.locals.isLoggedIn = req.session.isLoggedIn;
     res.locals.userName = req.session.name || "";
+    res.locals.hasTwitter = req.session.hasTwitter;
+    res.locals.twitterUserName = "";
+    if(req.session.hasTwitter && req.session.twitter)
+        res.locals.twitterUserName = req.session.twitter.userName || "";
     next();
 })
 
