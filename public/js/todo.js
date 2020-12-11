@@ -20,7 +20,7 @@ function showServerErrors(err) {
 function updateList() {
     work.forEach(function (job) {
         var span = $('<span />').addClass('close').text('\u00D7');
-        span.click(function () {
+        span.on('click',function () {
             $(this).parent().remove();
             $('#save').prop('disabled', false);
 
@@ -30,14 +30,14 @@ function updateList() {
         if (job.done) {
             list.addClass("checked");
         }
-        list.click(function () {
+        list.on('click',function () {
             $(this).toggleClass('checked');
             $('#save').prop('disabled', false);
         });
         $('#mytodo').append(list);
     });
 }
-$(document).ready(function () {
+$(function () {
     updateList();
     const urlParams = new URLSearchParams(window.location.search);
     const isNew = urlParams.get('new');
@@ -84,20 +84,24 @@ $(document).ready(function () {
             });
     }
     $('#save').prop('disabled', true);
-    $('#mytodo li').click(function () {
+    $('#mytodo li').on('click',function () {
         $(this).toggleClass('checked');
     });
 
-    $('.addBtn').click(function () {
+    $('.addBtn').on('click',function () {
         var value = $('#myInput').val();
+        if(value.length>80){
+            alert('The ToDo list can\'t have more than 80 chars');
+            return;
+        }
         if (value) {
             var span = $('<span />').addClass('close').text('\u00D7');
-            span.click(function () {
+            span.on('click',function () {
                 $(this).parent().remove();
             })
             var list = $('<li>' + value + '</li>');
             list.append(span);
-            list.click(function () {
+            list.on('click',function () {
                 $(this).toggleClass('checked');
             });
 
@@ -110,19 +114,19 @@ $(document).ready(function () {
 
 
 
-    $('#myInput').keypress(function (e) {
+    $('#myInput').on('keypress',function (e) {
         if (e.which === 13) {
-            $('.addBtn').click();
+            $('.addBtn').trigger('click');
         }
     });
 
-    $('#back').click(function () {
+    $('#back').on('click',function () {
         window.history.back();
     })
 
 
 
-    $('#save').click(function () {
+    $('#save').on('click',function () {
         var new_work = [];
         var len = $('#mytodo').children().length;
         if (len == 0) {
@@ -210,6 +214,5 @@ $(document).ready(function () {
                 });
         }
         $('#save').prop('disabled', true);
-
     });
 });

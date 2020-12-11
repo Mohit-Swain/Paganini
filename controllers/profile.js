@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const twitterTweet = require('../utils/includes/twitter_tweet');
 require('dotenv').config();
 
 const todoModel = require('../models/todos');
@@ -149,4 +150,43 @@ exports.deleteListById = function (req, res) {
                 errors: err
             })
         });
+}
+
+exports.sendTweets = function(req,res){
+    var dataId = req.body.dataId;
+    if(!dataId){
+        return res.json({
+            completed: false,
+            errors: ['Data Id not found']
+        });
+    }
+    else{
+        if(!req.session.hasTwitter || !res.session.twitter){
+            return res.json({
+                completed: false,
+                errors: ['please connect twitter account'],
+                data: req.session
+            })
+        }
+        var accessToken =  req.session.twitter.accessToken;
+        var refreshToken = req.session.twitter.refreshToken;
+        var userName = req.session.twitter.userName;
+        if(!accessToken || !refreshToken){
+            return res.json({
+                completed: false,
+                errors: ['AcessToken not found, please reconnect twitter']
+            })
+        }
+        twitterTweet.sendTweet(dataId,accessToken,refreshToken,userName).then((result) => {
+            return res.json({
+                completed : true,
+                result : result
+            })
+        }).catch((err) => {
+            return res.json({
+                completed: false,
+                errors: err
+            })
+        });
+    }
 }

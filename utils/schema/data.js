@@ -17,6 +17,10 @@ var dataSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    twitterPostId: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true

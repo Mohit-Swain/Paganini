@@ -4,8 +4,8 @@ require('dotenv').config();
 
 exports.config = function () {
     return new TwitterStrategy({
-            consumerKey: "QtE6JLxqgM2Q1YRez292MtVHA",
-            consumerSecret: "40NXunjZXrcRWkD9bNZVUwdU3yDK71zSWFtMeAEVRzBex86jU6",
+            consumerKey: process.env.TWITTER_CONSUMER_KEY,
+            consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
             callbackURL: "http://localhost:3000/oauth/twitter/callback",
             passReqToCallback: true,
             userAuthorizationURL: 'https://api.twitter.com/oauth/authorize?force_login=true'
@@ -28,7 +28,6 @@ exports.config = function () {
                     twitterDisplayName : profile.displayName
                 });
             }
-            
         }
     )
 }

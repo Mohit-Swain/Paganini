@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const jwtMiddleware = require('../utils/middlewares/jwt_authorize');
 const User = require('../utils/schema/user');
 const TwitterModel = require('../utils/schema/Twitter_data');
-const { session } = require('passport');
 require('dotenv').config();
 
 oauthRoutes.get('/oauth/google',
@@ -113,32 +112,32 @@ oauthRoutes.get('/oauth/twitter/callback',jwtMiddleware.authorize,
                     userId : mongoose.Types.ObjectId(req.userId)
                 });
                  return TwitterInst.save()
-                 .then(TwitterInst => {
-                     console.log('1');
-                    req.session.hasTwitter = true;
-                    req.session.twitter = TwitterInst;
-                    return req.session.save();
-                })
-                .then(() => {
-                    console.log('2');
-                    theUser.twitterAccount = req.session.twitter;
-                    return theUser.save();
-                })
-                .then(() =>{
-                    console.log("done twitttt");
-                    return res.redirect("back");
-                })
-                .catch(err =>{
-                    console.log('3');
-                    return res.redirect("/");
-                })
-                
             }
             else{
                 console.log('4');
-                return res.redirect("back");
+                TwitterInst.accessToken = req.account.accessToken;
+                TwitterInst.refreshToken =  req.account.refreshToken;
+                return TwitterInst.save();
             }
-        })
+        }).then(TwitterInst => {
+            console.log('1');
+           req.session.hasTwitter = true;
+           req.session.twitter = TwitterInst;
+           return req.session.save();
+       })
+       .then(() => {
+           console.log('2');
+           theUser.twitterAccount = req.session.twitter;
+           return theUser.save();
+       })
+       .then(() =>{
+           console.log("done twitttt");
+           return res.redirect("back");
+       })
+       .catch(err =>{
+           console.log('3');
+           return res.redirect("/");
+       })
         
         // Associate the Twitter account with the logged-in user.
         // account.userId = user.id;

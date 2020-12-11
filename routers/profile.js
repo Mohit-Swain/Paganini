@@ -13,6 +13,8 @@ profileRouter.post('/list/postList', jwtMiddleware.authorize, profileController.
 
 profileRouter.post('/todo/postGetTodoById', jwtMiddleware.authorize, profileController.postGetTodoById);
 
+profileRouter.post('/todo/postToTwitter',jwtMiddleware.authorize,jwtMiddleware.twitterAuthorize,profileController.sendTweets);
+
 profileRouter.put('/todo/updateTodoById', jwtMiddleware.authorize, profileController.putUpdateTodo);
 
 profileRouter.delete('/list/deleteListById', jwtMiddleware.authorize, profileController.deleteListById);
