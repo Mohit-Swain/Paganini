@@ -15,7 +15,7 @@ exports.config = function () {
             if(!req.session.isLoggedIn){
                 return cb({
                         completed: false,
-                        errors: ['User Not LoggedIn'],
+                        errors: ['User Not LoggedIn in Twitter'],
                         errorCode: 500
                     },null);
             }

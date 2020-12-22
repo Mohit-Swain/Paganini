@@ -128,3 +128,9 @@ input {
 .collapse {
     color: black;
 }
+
+/* Pagination */
+
+#pagination {
+    margin: 2rem;
+}

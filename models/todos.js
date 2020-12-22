@@ -107,7 +107,7 @@ exports.getTodoById = function (obj) {
         dataModel.findOne({
                 _id: ObjectId(todoId),
                 user: ObjectId(userId)
-            }).select(['title', 'todo'])
+            })
             .then(data => {
                 resolve(data);
             }).catch(err => {

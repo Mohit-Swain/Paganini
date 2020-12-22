@@ -126,8 +126,6 @@ exports.putUpdateTodo = function (req, res) {
                 errors: err
             })
         });
-
-
 }
 
 exports.deleteListById = function (req, res) {
@@ -161,11 +159,12 @@ exports.sendTweets = function(req,res){
         });
     }
     else{
-        if(!req.session.hasTwitter || !res.session.twitter){
+        console.log(req.session);
+        console.log(req.session.hasTwitter);
+        if(!req.session.hasTwitter){
             return res.json({
                 completed: false,
-                errors: ['please connect twitter account'],
-                data: req.session
+                errors: ['please connect twitter account']
             })
         }
         var accessToken =  req.session.twitter.accessToken;

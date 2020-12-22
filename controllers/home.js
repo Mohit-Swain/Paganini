@@ -29,14 +29,7 @@ module.exports = {
 
             }).then(user => {
                 console.log(user);
-                // console.log(user.resetTokenExpiration);
-                // console.log(Date.now());
-                // console.log(user.resetTokenExpiration > Date.now());
-                // console.log(user.resetTokenExpiration < Date.now());
-                // console.log(new Date(Date.now()));
-                // console.log(user.resetTokenExpiration > new Date(Date.now()));
-                // console.log(user.resetTokenExpiration < new Date(Date.now()));
-
+            
                 if (!user) {
                     // token invalid; Send 404
                     res.redirect('/login');

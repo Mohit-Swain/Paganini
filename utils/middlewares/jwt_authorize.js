@@ -35,8 +35,7 @@ exports.twitterAuthorize = function(req,res,next){
     if(!req.session.hasTwitter){
         return res.json({
             completed : false,
-            errors : ['Twitter handle not found!'],
-            errorCode: 500
+            errors : ['Twitter handle not found! Please connect']
         });
     }
     next();

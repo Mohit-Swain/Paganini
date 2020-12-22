@@ -6,43 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twello</title>
     <%- include('../includes/head-top'); %>
-    <link rel="stylesheet" href="css/todo.css">
+        <link rel="stylesheet" href="css/todo.css">
+        <script>window.twttr = (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0],
+                    t = window.twttr || {};
+                if (d.getElementById(id)) return t;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "https://platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js, fjs);
+
+                t._e = [];
+                t.ready = function (f) {
+                    t._e.push(f);
+                };
+
+                return t;
+            }(document, "script", "twitter-wjs"));
+        </script>
+
 </head>
 
 <body>
     <%- include('../includes/nav'); %>
-    <div class="todo">
-        <div class="container-fluid">
+        <div class="todo">
+            <div class="container-fluid">
 
-            <div id="myDIV" class="header">
-                <h2 id="title">My To Do List</h2>
-                <div class="row">
-                    <input type="text" id="myInput" placeholder="Add a ToDo..." autofocus>
-                    <span class=" addBtn">Add</span>
+                <div id="myDIV" class="header">
+                    <h2 id="title">My To Do List</h2>
+                    <div class="row">
+                        <input type="text" id="myInput" placeholder="Add a ToDo..." autofocus>
+                        <span class=" addBtn">Add</span>
+                    </div>
                 </div>
-            </div>
 
-            <ul id="mytodo">
-            </ul>
+                <ul id="mytodo">
+                </ul>
 
-            <div class="text-center">
-                <button class="btn btn-lg btn-info" id="back">Go Back</button>
-                <button class="btn btn-lg btn-info" id="save">Save</button>
-            </div>
-            <div class="row justify-content-center">
-                <div id="my-alert" class="alert alert-success w-30" style="display: none;" role="alert">
-                    Saved
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="text-center my-3">
+                    <button class="btn btn-lg btn-info" id="back">Go Back</button>
+                    <button class="btn btn-lg btn-info" id="save">Save</button>
                 </div>
+                <div class="row justify-content-center my-3">
+                    <button type="button" id="tweetIt" class="btn btn-outline-primary"><i class="fab fa-twitter"></i>
+                        Tweet
+                        Todo</button>
+                </div>
+                <div class="row justify-content-center my-3">
+                    <div id="my-alert" class="alert alert-success w-30" style="display: none;" role="alert">
+                        Saved
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="wjs"></div>
             </div>
+
         </div>
 
-    </div>
-
-    <%- include('../includes/head-down.ejs') %>
-    <script src="js/todo.js"></script>
+        <%- include('../includes/head-down.ejs') %>
+            <script src="js/todo.js"></script>
 </body>
 
 </html>

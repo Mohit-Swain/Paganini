@@ -1,6 +1,7 @@
 work = [];
 
 function myAlertSave() {
+    $('#tweetIt').show();
     $("#my-alert").show();
     setTimeout(function () {
         $("#my-alert").hide();
@@ -37,7 +38,7 @@ function updateList() {
         $('#mytodo').append(list);
     });
 }
-$(function () {
+$(function () {      
     updateList();
     const urlParams = new URLSearchParams(window.location.search);
     const isNew = urlParams.get('new');
@@ -75,6 +76,24 @@ $(function () {
 
                     work = result.result.todo;
                     updateList();
+                    if(result.result.twitterPostId){
+                        twttr.ready((par) =>{
+                            twttr.widgets.createTweet(
+                                result.result.twitterPostId,
+                                document.getElementById('wjs'),
+                                {
+                                  align: 'center'
+                                })
+                                .then(function (el) {
+                                  console.log("Tweet displayed.")
+                                });
+                        });
+                    }
+                    else{
+                        $('#wjs').html('<p class="text-center text-secondary">No tweets are made by this Todo List ('+ result.result.title +')<p>')
+                    }
+                    
+
                     // window.location.replace("http://localhost:3000/list");
                 }
             })
@@ -83,9 +102,12 @@ $(function () {
                 showServerErrors(error);
             });
     }
+
+
     $('#save').prop('disabled', true);
     $('#mytodo li').on('click',function () {
         $(this).toggleClass('checked');
+        $('#save').prop('disabled', false);
     });
 
     $('.addBtn').on('click',function () {
@@ -109,7 +131,6 @@ $(function () {
             $('#myInput').val("");
             $('#save').prop('disabled', false);
         }
-        // updateList();
     });
 
 
@@ -124,8 +145,6 @@ $(function () {
         window.history.back();
     })
 
-
-
     $('#save').on('click',function () {
         var new_work = [];
         var len = $('#mytodo').children().length;
@@ -134,8 +153,6 @@ $(function () {
         }
         for (var i = 0; i < len; i++) {
             let list = $('#mytodo').children()[i];
-            // console.log(list.innerText.slice(0, -1));
-            // console.log(list.className)
             let obj = {
                 name: list.innerText.slice(0, -1).replace(/^\s+|\s+$/g, ''),
                 done: (list.className === "checked")
@@ -196,16 +213,14 @@ $(function () {
                 .then(response => response.json())
                 .then(result => {
                     console.log(result);
-
-                    if (result.completed === false) {
+                    
+                    if (result.completed === false) {    
                         showServerErrors(result.errors);
                         if (result.errorCode === 500) {
                             window.location.replace("http://localhost:3000/api/logout");
                         }
                     } else {
                         myAlertSave();
-                        // updateList();
-                        // window.location.replace("http://localhost:3000/list");
                     }
                 })
                 .catch(error => {
@@ -214,5 +229,75 @@ $(function () {
                 });
         }
         $('#save').prop('disabled', true);
+    });
+
+    // Tweet
+    $('#tweetIt').on('click',function(Event){
+        let id = urlParams.get('id');
+        if(!id){
+            alert('No Data Id found');
+            return;
+        }     
+
+        console.log( $('#save').prop('disabled'));
+        if(!$('#save').prop('disabled')){
+            alert('Your Updated ToDo is not Saved');
+            return;
+        }
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({"dataId":id});
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch("http://localhost:3000/todo/postToTwitter", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+
+            if(result.completed === true){
+                // ok
+                if(!result.result.tweetId) 
+                    return;
+
+                $('#tweetIt').hide();
+                twttr.ready((par) =>{
+                    twttr.widgets.createTweet(
+                        result.result.tweetId,
+                        document.getElementById('wjs'),
+                        {
+                          align: 'center'
+                        })
+                        .then(function (el) {
+                          console.log("Tweet displayed.")
+                        });
+                });
+
+            }
+            else{
+                if(typeof result.errors[0] === 'object'){
+                    showServerErrors(result.errors[0].message);
+                    if (result.errors[0].statsCode === 401) {
+                        alert('Try reconnecting to your twitter account');
+                    }
+                }
+                else{
+                    showServerErrors(result.errors);
+                    if (result.errorCode === 500) {
+                        window.location.replace("http://localhost:3000/api/logout");
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.log('error', error)
+            showServerErrors(error);
+        });
     });
 });

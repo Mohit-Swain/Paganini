@@ -22,6 +22,7 @@ exports.sendTweet= (dataId,accessToken,refreshToken,screenName) => {
             if(!data){
                 reject(['No such todo  exists'])
             }
+            let root_tweet_id = undefined;
             console.log("start");
             var ans = "";
             ans = data.title.toUpperCase() +"\n\n";
@@ -49,6 +50,9 @@ exports.sendTweet= (dataId,accessToken,refreshToken,screenName) => {
                         else{
                             var response = await T.post('statuses/update',{status : ans, in_reply_to_status_id : prev});
                         }
+                        if(root_tweet_id === undefined){
+                            root_tweet_id = response.data.id_str;
+                        }
                         ans ='@'+screenName + ' ';
                         prev = response.data.id_str;
                         console.log(prev);
@@ -69,12 +73,26 @@ exports.sendTweet= (dataId,accessToken,refreshToken,screenName) => {
                 else{
                     var response = await T.post('statuses/update',{status : ans, in_reply_to_status_id : prev});
                 }
+
+                if(root_tweet_id === undefined){
+                    root_tweet_id = response.data.id_str;
+                }
+
+                console.log(root_tweet_id);
+
+                if(root_tweet_id){
+                    data.twitterPostId = root_tweet_id;
+                    let res = await data.save();
+                    console.log(res);
+                }
+                
+                resolve({
+                    tweetId : root_tweet_id
+                });
             }
             catch(err){
                 reject([err]);
             }
-
-            resolve(true);
         })
         .catch(err =>{
             reject(['Some error occured',err]);
