@@ -25,7 +25,7 @@ function showServerErrors(err) {
             alert('Server: ' + error);
         });
     } else {
-        alert('Server: ' + err);
+        alert('Server: ' + JSON.stringify(err));
     }
 }
 $(document).ready(function () {
@@ -66,7 +66,7 @@ $(document).ready(function () {
         fetch("/api/login", requestOptions)
             .then(response => response.json())
             .then(result => {
-
+                // console.log(result);
                 if (!result.completed) {
                     showServerErrors(result.errors);
                 } else {

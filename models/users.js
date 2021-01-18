@@ -14,11 +14,8 @@ exports.addUser = function (user) {
         userModel.findOne({
             email: email
         }, function (err, user) {
-            if (user) {
-                reject({
-                    completed: false,
-                    errors: ['The user email already exists']
-                })
+            if (user && !user.googleId) {
+                reject( ['The user email already exists'])
             } else {
                 bcrypt.hash(password, 12).then(hashPassword => {
                     var newUser = new userModel({
@@ -28,14 +25,9 @@ exports.addUser = function (user) {
                     });
                     return newUser.save()
                 }).then((res) => {
-                    resolve({
-                        completed: true,
-                    })
+                    resolve()
                 }).catch(err => {
-                    reject({
-                        completed: false,
-                        errors: [err]
-                    })
+                    reject(err)
                 })
             }
         });
@@ -46,14 +38,13 @@ exports.check = function (user) {
     var email = user.email;
     var password = user.password;
     return new Promise(function (resolve, reject) {
+        
         userModel.findOne({
             email: email
-        }, function (err, user) {
+        }).where('password').exists(true)
+        .then(function (user) {
             if (!user) {
-                reject({
-                    completed: false,
-                    errors: ['The user email doesn\'t exists']
-                });
+                reject(['The user email doesn\'t exists']);
             } else {
                 bcrypt.compare(password, user.password).then(result => {
                     if (result) {
@@ -64,25 +55,20 @@ exports.check = function (user) {
                             expiresIn: 60 * 60
                         });
                         resolve({
-                            completed: true,
                             token: token,
                             name: user.userName,
                             twitterAccountId: user.twitterAccount
                         });
                     } else {
-                        reject({
-                            completed: false,
-                            errors: ['The Password Didn\'t match']
-                        });
+                        reject(['The Password Didn\'t match']);
                     }
                 }).catch(err => {
-                    reject({
-                        completed: false,
-                        errors: [err]
-                    })
+                    reject(err)
                 })
             }
         })
+        .catch(err => reject(err));
+         
     });
 }
 
@@ -110,11 +96,11 @@ exports.changePassword = function (obj) {
                     user.save();
                     resolve({})
                 }).catch(err => {
-                    reject([err._message]);
+                    reject(err._message);
                 });;
             }
         }).catch(err => {
-            reject([err._message]);
+            reject(err._message);
         });
 
     });

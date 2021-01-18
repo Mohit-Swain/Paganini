@@ -21,7 +21,7 @@ function showServerErrors(err) {
             alert('Server: ' + error);
         });
     } else {
-        alert('Server: ' + err);
+        alert('Server: ' + JSON.stringify(err));
     }
 }
 

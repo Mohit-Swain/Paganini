@@ -23,7 +23,7 @@ function showServerErrors(err) {
             alert('Server: ' + error);
         });
     } else {
-        alert('Server: ' + error);
+        alert('Server: ' + JSON.stringify(error));
     }
 }
 

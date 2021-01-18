@@ -8,6 +8,14 @@ const User = require('../utils/schema/user');
 const TwitterModel = require('../utils/schema/Twitter_data');
 require('dotenv').config();
 
+var url = '';
+if(process.env.NODE_ENV === 'development'){
+    url = "http://localhost:3000";
+}
+else if(process.env.NODE_ENV === 'production'){
+    url = "https://twello.herokuapp.com";
+}
+
 oauthRoutes.get('/oauth/google',
     passport.authenticate('google', {
         scope: ['profile', 'email']
@@ -15,7 +23,7 @@ oauthRoutes.get('/oauth/google',
 
 oauthRoutes.get('/oauth/google/callback',
     passport.authenticate('google', {
-        failureRedirect: '/login'
+        failureRedirect: url + '/login'
     }),
     function (req, res) {
         req.session.isLoggedIn = true;
@@ -33,7 +41,7 @@ oauthRoutes.get('/oauth/google/callback',
                 }
                 return req.session.save();
             }).then(() => {
-                return res.redirect('/');
+                return res.redirect(url);
             }).catch(() => {
                 return res.json({
                     completed: false,
@@ -43,7 +51,7 @@ oauthRoutes.get('/oauth/google/callback',
         }
         else{
             req.session.save(() => {
-                return res.redirect('/');
+                return res.redirect(url);
             });
         }
     });
@@ -58,9 +66,9 @@ oauthRoutes.get('/oauth/twitter',jwtMiddleware.authorize,
         .populate('twitterAccount')
         .then(user =>{
             if(!user){
-                return res.redirect("/")
+                return res.redirect(url)
             }
-            if(!user.twitterAccount){
+            else if(!user.twitterAccount){
                 return next();
             }
             else{
@@ -68,19 +76,19 @@ oauthRoutes.get('/oauth/twitter',jwtMiddleware.authorize,
                 req.session.twitter = user.twitterAccount;
                 return req.session.save()
                         .then(() => res.redirect("back"))
-                        .catch(err => res.redirect('/'));
+                        .catch(err => res.redirect(url));
             }
-        }).catch(() =>{
-            return res.redirect("/");
+        }).catch((err) =>{
+            return res.redirect(url);
         })
     },passport.authorize('twitter', {
-        failureRedirect: '/'
+        failureRedirect: url        
     })
 );
 
 oauthRoutes.get('/oauth/twitter/callback',jwtMiddleware.authorize,
     passport.authorize('twitter', {
-        failureRedirect: '/'
+        failureRedirect: url
     }),
     function (req, res) {
         var theUser = null;
@@ -92,36 +100,29 @@ oauthRoutes.get('/oauth/twitter/callback',jwtMiddleware.authorize,
             return TwitterModel.findOne({id : req.account.twitterId,userId : user._id});
         })
         .then((TwitterInst) =>{
-            if(!TwitterInst){
-                TwitterInst = new TwitterModel({
-                    id : req.account.twitterId,
-                    userName: req.account.twitterUserName,
-                    displayName: req.account.twitterDisplayName,
-                    accessToken: req.account.accessToken,
-                    refreshToken: req.account.refreshToken,
-                    userId : mongoose.Types.ObjectId(req.userId)
-                });
-                 return TwitterInst.save()
-            }
-            else{
-                TwitterInst.accessToken = req.account.accessToken;
-                TwitterInst.refreshToken =  req.account.refreshToken;
-                return TwitterInst.save();
-            }
+            TwitterInst = new TwitterModel({
+                id : req.account.twitterId,
+                userName: req.account.twitterUserName,
+                displayName: req.account.twitterDisplayName,
+                accessToken: req.account.accessToken,
+                refreshToken: req.account.refreshToken,
+                userId : mongoose.Types.ObjectId(req.userId)
+            });
+            return TwitterInst.save()
         }).then(TwitterInst => {
            req.session.hasTwitter = true;
            req.session.twitter = TwitterInst;
+           theUser.twitterAccount = TwitterInst;
            return req.session.save();
        })
        .then(() => {
-           theUser.twitterAccount = req.session.twitter;
            return theUser.save();
        })
        .then(() =>{
-           return res.redirect("back");
+           return res.redirect(url);
        })
        .catch(err =>{
-           return res.redirect("/");
+           return res.redirect(url);
        })
         
     }
