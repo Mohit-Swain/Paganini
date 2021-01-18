@@ -1,7 +1,4 @@
 const userModel = require('../models/users');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const user = require('../utils/schema/user');
 const twitterModel = require('../utils/schema/Twitter_data');
 require('dotenv').config();
 
@@ -89,18 +86,13 @@ exports.putChangePassword = function (req, res) {
         userId: userId,
         token: token
     };
-    console.log('controller');
     userModel.changePassword(obj)
         .then((result) => {
-            console.log('controller res');
-            console.log(result);
             return res.json({
                 completed: true,
                 result: result
             })
         }).catch((err) => {
-            console.log('controller err ');
-            console.log(err);
             return res.json({
                 completed: false,
                 errors: err

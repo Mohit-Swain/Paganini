@@ -13,7 +13,6 @@ exports.getList = function (req, res) {
 }
 
 exports.postAddList = function (req, res) {
-    console.log('controller');
     var title = req.body.title;
     var work = req.body.work;
     var email = req.email;
@@ -41,7 +40,6 @@ exports.postAddList = function (req, res) {
 
 
 exports.postList = function (req, res) {
-    console.log('controller');
     var pageNo = req.body.pageNo;
     var perPage = req.body.perPage;
     if (!pageNo || !perPage) {
@@ -60,7 +58,6 @@ exports.postList = function (req, res) {
 
     todoModel.getDataList(obj)
         .then((result) => {
-            // console.log(result);
             return res.json({
                 completed: true,
                 result: result
@@ -81,11 +78,6 @@ exports.postGetTodoById = function (req, res) {
         id: id,
         todoId: todoId
     };
-
-    console.log({
-        id: id,
-        todoId: todoId
-    });
 
     todoModel.getTodoById(obj)
         .then((result) => {
@@ -112,7 +104,6 @@ exports.putUpdateTodo = function (req, res) {
         todoId: todoId,
         new_todos: new_todos
     }
-    console.log(obj);
 
     todoModel.updateById(obj)
         .then((result) => {
@@ -159,8 +150,7 @@ exports.sendTweets = function(req,res){
         });
     }
     else{
-        console.log(req.session);
-        console.log(req.session.hasTwitter);
+
         if(!req.session.hasTwitter){
             return res.json({
                 completed: false,

@@ -3,15 +3,21 @@ const User = require('../schema/user')
 require('dotenv').config();
 
 exports.config = function () {
+    var url = '';
+    if(process.env.NODE_ENV === 'development'){
+        url = "http://localhost:3000/oauth/twitter/callback";
+    }
+    else if(process.env.NODE_ENV === 'production'){
+        url = "https://twello.herokuapp.com/oauth/twitter/callback";
+    }
     return new TwitterStrategy({
             consumerKey: process.env.TWITTER_CONSUMER_KEY,
             consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-            callbackURL: "http://localhost:3000/oauth/twitter/callback",
+            callbackURL: url,
             passReqToCallback: true,
             userAuthorizationURL: 'https://api.twitter.com/oauth/authorize?force_login=true'
         },
         function (req, accessToken, refreshToken, profile, cb) {
-            console.log("callback");
             if(!req.session.isLoggedIn){
                 return cb({
                         completed: false,

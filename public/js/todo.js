@@ -61,15 +61,14 @@ $(function () {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:3000/todo/postGetTodoById", requestOptions)
+        fetch("/todo/postGetTodoById", requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log(result);
 
                 if (result.completed === false) {
                     showServerErrors(result.errors);
                     if (result.errorCode === 500) {
-                        window.location.replace("http://localhost:3000/api/logout");
+                        window.location.replace("/api/logout");
                     }
                 } else {
                     $('#title').html(result.result.title);
@@ -85,7 +84,7 @@ $(function () {
                                   align: 'center'
                                 })
                                 .then(function (el) {
-                                  console.log("Tweet displayed.")
+                                  console.log("Tweet displayed.");
                                 });
                         });
                     }
@@ -94,11 +93,10 @@ $(function () {
                     }
                     
 
-                    // window.location.replace("http://localhost:3000/list");
+                    // window.location.replace("/list");
                 }
             })
             .catch(error => {
-                console.log('error', error)
                 showServerErrors(error);
             });
     }
@@ -175,22 +173,20 @@ $(function () {
                 redirect: 'follow'
             };
 
-            fetch("http://localhost:3000/todo/postAddList", requestOptions)
+            fetch("/todo/postAddList", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    console.log(result);
 
                     if (result.completed === false) {
                         showServerErrors(result.errors);
                         if (result.errorCode === 500) {
-                            window.location.replace("http://localhost:3000/api/logout");
+                            window.location.replace("/api/logout");
                         }
                     } else {
-                        window.location.replace("http://localhost:3000/list");
+                        window.location.replace("/list");
                     }
                 })
                 .catch(error => {
-                    console.log('error', error)
                     showServerErrors(error);
                 });
         } else if (isNew === 'false') {
@@ -209,22 +205,20 @@ $(function () {
                 redirect: 'follow'
             };
 
-            fetch("http://localhost:3000/todo/updateTodoById", requestOptions)
+            fetch("/todo/updateTodoById", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    console.log(result);
                     
                     if (result.completed === false) {    
                         showServerErrors(result.errors);
                         if (result.errorCode === 500) {
-                            window.location.replace("http://localhost:3000/api/logout");
+                            window.location.replace("/api/logout");
                         }
                     } else {
                         myAlertSave();
                     }
                 })
                 .catch(error => {
-                    console.log('error', error)
                     showServerErrors(error);
                 });
         }
@@ -239,7 +233,6 @@ $(function () {
             return;
         }     
 
-        console.log( $('#save').prop('disabled'));
         if(!$('#save').prop('disabled')){
             alert('Your Updated ToDo is not Saved');
             return;
@@ -256,10 +249,9 @@ $(function () {
         redirect: 'follow'
         };
 
-        fetch("http://localhost:3000/todo/postToTwitter", requestOptions)
+        fetch("/todo/postToTwitter", requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
 
             if(result.completed === true){
                 // ok
@@ -275,7 +267,8 @@ $(function () {
                           align: 'center'
                         })
                         .then(function (el) {
-                          console.log("Tweet displayed.")
+                          console.log("Tweet displayed.");
+                          $("html, body").animate({ scrollTop: $("#wjs").scrollTop() }, 500);
                         });
                 });
 
@@ -290,13 +283,12 @@ $(function () {
                 else{
                     showServerErrors(result.errors);
                     if (result.errorCode === 500) {
-                        window.location.replace("http://localhost:3000/api/logout");
+                        window.location.replace("/api/logout");
                     }
                 }
             }
         })
         .catch(error => {
-            console.log('error', error)
             showServerErrors(error);
         });
     });

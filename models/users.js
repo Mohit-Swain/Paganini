@@ -90,14 +90,8 @@ exports.changePassword = function (obj) {
     var new_password = obj.new_password;
     var userId = obj.userId;
     var token = obj.token;
-    console.log('model');
-    console.log(new_password);
-    console.log(userId);
-    console.log(token);
-
-    console.log(typeof userId);
+;
     return new Promise(function (resolve, reject) {
-        console.log("promise");
         userModel.findOne({
             _id: ObjectId(userId),
             resetToken: token,
@@ -105,12 +99,10 @@ exports.changePassword = function (obj) {
                 $gte: Date.now()
             }
         }).then(user => {
-            console.log("uer");
             if (!user) {
                 reject(['Token is inValid try again']);
             } else {
                 // change it
-                console.log(user);
                 bcrypt.hash(new_password, 12).then(hashPassword => {
                     user.password = hashPassword;
                     user.resetToken = undefined;
@@ -118,14 +110,10 @@ exports.changePassword = function (obj) {
                     user.save();
                     resolve({})
                 }).catch(err => {
-                    console.log("err2");
-                    console.log(err);
                     reject([err._message]);
                 });;
             }
         }).catch(err => {
-            console.log("err1");
-            console.log(JSON.stringify(err));
             reject([err._message]);
         });
 

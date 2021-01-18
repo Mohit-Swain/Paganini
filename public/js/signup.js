@@ -5,7 +5,6 @@ function validateEmail(email) {
 var ErrorCount = 0;
 
 function showError(name) {
-    // console.log('e' + name);
     ErrorCount++;
     $(name).removeClass('is-valid');
     $(name).addClass('is-invalid');
@@ -13,7 +12,6 @@ function showError(name) {
 }
 
 function showOk(name) {
-    // console.log('o' + name);
     $(name).removeClass('is-invalid');
     $(name).addClass('is-valid');
     $(name + '-feedback').css('display', 'none');
@@ -30,7 +28,6 @@ function showServerErrors(err) {
 }
 
 $(document).ready(function () {
-    // console.log('insignup');
     $('#signUp').click(function (res) {
         let name = $('#name').val() || '';
         let email = $('#email').val() || '';
@@ -51,8 +48,7 @@ $(document).ready(function () {
         } else {
             showError('#password');
         }
-        // console.log(password);
-        // console.log(cpassword);
+
         if (cpassword.length >= 8 && password === cpassword) {
             showOk('#confirm-password');
         } else {
@@ -75,17 +71,15 @@ $(document).ready(function () {
             }),
             redirect: 'follow'
         };
-        console.log('fetch ' + requestOptions.body);
-        fetch("http://localhost:3000/api/signup", requestOptions)
+        fetch("/api/signup", requestOptions)
             .then(response => {
-                // console.log(response);
                 return response.json();
             })
             .then(result => {
                 if (!result.completed) {
                     showServerErrors(result.errors);
                 } else {
-                    window.location.replace("http://localhost:3000/login");
+                    window.location.replace("/login");
                 }
             })
             .catch(error => {

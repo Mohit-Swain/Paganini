@@ -6,7 +6,6 @@ const userModel = require('../utils/schema/user');
 
 const ObjectId = mongoose.mongo.ObjectID;
 exports.addNewData = function (obj) {
-    console.log('model');
     var title = obj.title;
     var work = obj.work;
     var userId = obj.id;
@@ -17,7 +16,6 @@ exports.addNewData = function (obj) {
             email: email,
             _id: ObjectId(userId)
         }).then(user => {
-            // console.log(user.data);
             var todo = new dataModel({
                 title: title,
                 todo: work,
@@ -25,16 +23,13 @@ exports.addNewData = function (obj) {
             });
             todo.save(function (err, result) {
                 if (err) {
-                    // console.log(err);
                     reject(['Data Model can\'t be created', err._message]);
                 } else {
                     user.data.unshift(result._id);
                     user.save(function (err, result) {
                         if (err) {
-                            console.log(err);
                             reject(['Cant save the data in the user', err._message]);
                         }
-                        // console.log(result);
                     });
                     resolve({
                         data: result
@@ -42,7 +37,6 @@ exports.addNewData = function (obj) {
                 }
             });
         }).catch(err => {
-            console.log(err);
             reject([err._message]);
         });
     });
@@ -70,7 +64,6 @@ exports.getDataList = function (obj) {
     var userId = obj.id;
 
     pageNo -= 1;
-    console.log(obj);
     return new Promise(function (resolve, reject) {
         dataModel.find({
                 user: ObjectId(userId)
@@ -84,7 +77,6 @@ exports.getDataList = function (obj) {
                         user: ObjectId(userId)
                     }).countDocuments()
                     .then((count) => {
-                        console.log(count);
                         // reject for pages> page
                         resolve({
                             todos: result,

@@ -23,26 +23,22 @@ function DeleteList(id) {
         redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/list/deleteListById", requestOptions)
+    fetch("/list/deleteListById", requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
-
             if (!result.completed) {
                 if (result.errorCode === 500) {
-                    window.location.replace("http://localhost:3000/api/logout");
+                    window.location.replace("/api/logout");
                 }
                 showServerErrors(result.errors);
             } else {
                 console.log('deleted');
-                console.log(result.result);
             }
         })
-        .catch(error => console.log('error', error));
+        .catch(error => console.log('error ', error));
 }
 
 function updateList() {
-    // console.log(todos);
     todos.forEach(function (job) {
         var span = $('<span />').addClass('close').html('<img src="images/delete_bin.png" alt="Delete List"></span>');
         var list = $('<li>' + job.title + '</li>');
@@ -58,8 +54,8 @@ function updateList() {
             if (e.target !== this) {
                 return;
             }
-            // window.location.replace("http://localhost:3000/todo:" + job._id);
-            window.location.href = "http://localhost:3000/todo?new=false&id=" + job._id;
+            // window.location.replace("/todo:" + job._id);
+            window.location.href = "/todo?new=false&id=" + job._id;
         })
         list.append(span);
         $('#List').append(list);
@@ -77,7 +73,7 @@ function createPagination(currentPage, totalPages) {
         next: '<span aria-hidden="true">&raquo;</span>',
         onPageClick: function (event, page) {
             if (page != currentPage)
-                window.location.replace("http://localhost:3000/list?page=" + page);
+                window.location.replace("/list?page=" + page);
         }
 
     });
@@ -91,8 +87,8 @@ $(document).ready(function () {
             $('#title').addClass('is-invalid');
             return;
         }
-        // window.location.replace("http://localhost:3000/todo?new=true&title=" + val);
-        window.location.href = "http://localhost:3000/todo?new=true&title=" + val
+        // window.location.replace("/todo?new=true&title=" + val);
+        window.location.href = "/todo?new=true&title=" + val
     });
 
 
@@ -102,7 +98,7 @@ $(document).ready(function () {
     const perPage = 10;
     pageNo = parseInt(pageNo);
     if (!pageNo || isNaN(pageNo)) {
-        window.location.replace("http://localhost:3000/list?page=1");
+        window.location.replace("/list?page=1");
         return;
     }
 
@@ -119,19 +115,18 @@ $(document).ready(function () {
         redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/list/postList", requestOptions)
+    fetch("/list/postList", requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
 
             if (!result.completed) {
                 if (result.errorCode === 500) {
-                    window.location.replace("http://localhost:3000/api/logout");
+                    window.location.replace("/api/logout");
                 }
                 showServerErrors(result.errors);
             } else {
                 if (result.result.page > result.result.pages) {
-                    window.location.replace("http://localhost:3000/list?page=" + pageNo);
+                    window.location.replace("/list?page=" + pageNo);
                     return;
                 }
                 todos = result.result.todos;
@@ -141,7 +136,7 @@ $(document).ready(function () {
                 createPagination(currentPage, totalPages);
                 // console.log(currentPage);
                 // console.log(totalPages);
-                // window.location.replace("http://localhost:3000/");
+                // window.location.replace("/");
             }
         })
         .catch(error => console.log('error', error));
