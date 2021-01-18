@@ -1,16 +1,18 @@
+const fs = require('fs');
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const helmet = require('helmet');
+const compression = require('compression');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 require('dotenv').config()
-
-
 
 
 const homeRouter = require(path.join(__dirname, '/routers', 'home'));
@@ -26,19 +28,24 @@ passport.use(twitter_oauth.config());
 
 const app = express();
 
+app.use(helmet({
+    contentSecurityPolicy : false
+}));
+app.use(compression());
 
+app.use(cors());
 app.use(express.static(path.join(__dirname, '/public')));
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
-app.use(cors());
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
     extended: false
 }));
 app.use(bodyParser.json());
-app.use(cookieParser())
-app.use(morgan('tiny'));
+app.use(cookieParser());
+const acessLogStream = fs.createWriteStream(path.join(__dirname,'acess.log'), {flags : 'a'});
+app.use(morgan('tiny',{stream : acessLogStream}));
 
-var url = `mongodb+srv://mohit6564:${process.env.mongoPassword}@cluster0.r69uy.mongodb.net/appDB?retryWrites=true&w=majority`;
+var url = `mongodb+srv://mohit6564:${process.env.mongoPassword}@cluster0.r69uy.mongodb.net/${process.env.mongoDBName}?retryWrites=true&w=majority`;
 
 app.use(session({
     secret: 'keyboard dog',
@@ -55,12 +62,10 @@ app.use(session({
 // Oauth
 const User = require(path.join(__dirname, '/utils', 'schema', 'user'))
 passport.serializeUser(function (user, cb) {
-    console.log('sear');
     cb(null, user._id);
 });
 
 passport.deserializeUser(function (id, cb) {
-    console.log('desear');
     User.findById(mongoose.Types.ObjectId(id))
         .select({email : 1,userName : 1 })
         .then(user => cb(null, user))
@@ -95,8 +100,6 @@ app.use(profileRouter);
 app.use(mailChimpRouter);
 
 app.use((err, req, res, next) => {
-    console.log('*********************************');
-    console.log('error is \n', err);
     if (err.statusCode === 500) {
         req.session.isLoggedIn = false;
     }
@@ -110,7 +113,6 @@ mongoose.connect(url, {
     useUnifiedTopology: true
 }).then(() => {
     let listener = app.listen(port, () => {
-        // console.log(req.session);
         console.log(`Example app listening on port ${listener.address().port}!`);
     });
 });

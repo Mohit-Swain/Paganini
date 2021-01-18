@@ -4,14 +4,12 @@ function validateEmail(email) {
 }
 
 function showError(name) {
-    // console.log('e' + name);
     $(name).removeClass('is-valid');
     $(name).addClass('is-invalid');
     $(name + '-feedback').css('display', 'block');
 }
 
 function showOk(name) {
-    // console.log('o' + name);
     $(name).removeClass('is-invalid');
     $(name).addClass('is-valid');
     $(name + '-feedback').css('display', 'none');
@@ -49,21 +47,19 @@ $(document).ready(function () {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:3000/api/send_recovery_mail", requestOptions)
+        fetch("/api/send_recovery_mail", requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log(result);
 
                 if (!result.completed) {
                     showServerErrors(result.errors);
                 } else {
                     $('#submit-feedback').show();
-                    // console.log(result);
                     setTimeout(() => {
-                        window.location.replace("http://localhost:3000/");
+                        window.location.replace("/");
                     }, 6000);
                 }
             })
-            .catch(error => console.log('error', error));
+            .catch(error => console.log('error ', error));
     });
 });

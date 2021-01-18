@@ -53,7 +53,6 @@ mailRouter.post('/api/send_recovery_mail', function (req, res) {
                 errors: ['No such user found, Please SignIn']
             });
         }
-        console.log(user);
         crypto.randomBytes(32, (err, buffer) => {
             if (err) {
                 return res.json({
@@ -386,7 +385,6 @@ mailRouter.post('/api/send_recovery_mail', function (req, res) {
 
         })
     }).catch(err => {
-        console.log(err);
         return res.json({
             completed: false,
             errors: [err]

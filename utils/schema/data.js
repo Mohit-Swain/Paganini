@@ -8,11 +8,6 @@ var dataSchema = new Schema({
         name: String,
         done: Boolean
     }],
-    expiry: Date,
-    isShared: {
-        type: Boolean,
-        default: false
-    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',

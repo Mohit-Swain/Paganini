@@ -1,7 +1,6 @@
 var ErrorCount = 0;
 
 function showError(name) {
-    // console.log('e' + name);
     ErrorCount++;
     $(name).removeClass('is-valid');
     $(name).addClass('is-invalid');
@@ -9,7 +8,6 @@ function showError(name) {
 }
 
 function showOk(name) {
-    // console.log('o' + name);
     $(name).removeClass('is-invalid');
     $(name).addClass('is-valid');
     $(name + '-feedback').css('display', 'none');
@@ -45,8 +43,7 @@ $(document).ready(function () {
             showError('#password');
             return;
         }
-        // console.log(password);
-        // console.log(cpassword);
+
         if (cpassword.length >= 8 && password === cpassword) {
             showOk('#confirm-password');
         } else {
@@ -69,25 +66,21 @@ $(document).ready(function () {
             }),
             redirect: 'follow'
         };
-        console.log('fetch ' + requestOptions.body);
-        fetch("http://localhost:3000/api/changePassword", requestOptions)
+        fetch("/api/changePassword", requestOptions)
             .then(response => {
-                // console.log(response);
                 return response.json();
             })
             .then(result => {
                 if (!result.completed) {
                     showServerErrors(result.errors);
                 } else {
-                    // console.log(result);
                     $('#submit-feedback').show();
                     setTimeout(() => {
-                        window.location.replace("http://localhost:3000/login");
+                        window.location.replace("/login");
                     }, 4000);
                 }
             })
             .catch(error => {
-                console.log(error);
                 showServerErrors(error);
             });
     });

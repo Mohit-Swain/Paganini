@@ -63,18 +63,16 @@ $(document).ready(function () {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:3000/api/login", requestOptions)
+        fetch("/api/login", requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log(result);
 
                 if (!result.completed) {
                     showServerErrors(result.errors);
                 } else {
-                    console.log(result);
-                    window.location.replace("http://localhost:3000/");
+                    window.location.replace("/");
                 }
             })
-            .catch(error => console.log('error', error));
+            .catch(error => console.log('error ', error));
     });
 });

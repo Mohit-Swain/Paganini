@@ -16,7 +16,6 @@ module.exports = {
     },
     getResetPassword: function (req, res) {
         var token = req.params.token;
-        console.log('Token is ' + token);
 
         userModel.findOne({
                 resetToken: token,
@@ -27,9 +26,7 @@ module.exports = {
                     $exists: true
                 }
 
-            }).then(user => {
-                console.log(user);
-            
+            }).then(user => {            
                 if (!user) {
                     // token invalid; Send 404
                     res.redirect('/login');
