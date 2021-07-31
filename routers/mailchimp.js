@@ -1,11 +1,11 @@
 const express = require('express')
-const sgMail = require('@sendgrid/mail');
 const userModel = require('../utils/schema/user');
 const mailRouter = express.Router();
+const sendMail = require('../utils/includes/sendmail');
 const crypto = require('crypto');
 require('dotenv').config();
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const mailjet = require ('node-mailjet')
+    .connect(process.env.NODEMAILER_USER, process.env.NODEMAILER_PASSWORD)
 
 mailRouter.post('/api/send_message', function (req, res) {
     var name = req.body.name || "Guest";
@@ -19,7 +19,7 @@ mailRouter.post('/api/send_message', function (req, res) {
     }
     const msg = {
         to: 'swain6564@gmail.com',
-        from: 'TwelloHQ <mohit6564@gmail.com>',
+        from: 'TwelloHQ <118cs0219@nitrkl.com>',
         subject: 'You Got a new message from your twello app',
         text: JSON.stringify({
             name: name,
@@ -29,7 +29,29 @@ mailRouter.post('/api/send_message', function (req, res) {
         html: `From <strong>${name}</strong> <i>${email}</i><br>
                 Message: <blockquote>${message}</blockquote>`,
     };
-    sgMail.send(msg);
+    mailjet.post("send", {'version': 'v3.1'})
+    .request({
+        "Messages":[{
+          "From": {
+              "Email": "118cs0219@nitrkl.ac.in",
+              "Name": "TwelloHQ"
+          },
+          "To": [{
+              "Email": msg.to,
+              "Name": "passenger 1"
+          }],
+          "Subject": msg.subject,
+          "TextPart": msg.text,
+          "HTMLPart": msg.html
+      }]
+
+    }).then((result) => {
+        console.log(result.body)
+    })
+    .catch((err) => {
+        console.log(err.statusCode)
+    })
+
     return res.redirect('/');
 });
 
@@ -69,7 +91,7 @@ mailRouter.post('/api/send_recovery_mail', function (req, res) {
             })
             const msg = {
                 to: email,
-                from: 'TwelloHQ <mohit6564@gmail.com>',
+                from: 'TwelloHQ <118cs0219@nitrkl.ac.in>',
                 subject: 'Password Reset Email for your twello account!',
                 text: `GoTo : http://localhost:3000/reset_password/${token}`,
                 html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -381,9 +403,23 @@ mailRouter.post('/api/send_recovery_mail', function (req, res) {
                               
                               </html>`,
             };
-            sgMail.send(msg);
-
+    mailjet.post("send", {'version': 'v3.1'})
+    .request({
+        "Messages":[{
+          "From": {
+              "Email": "118cs0219@nitrkl.ac.in",
+              "Name": "TwelloHQ"
+          },
+          "To": [{
+              "Email": msg.to,
+              "Name": "passenger 1"
+          }],
+          "Subject": msg.subject,
+          "TextPart": msg.text,
+          "HTMLPart": msg.html
+          }]
         })
+      })
     }).catch(err => {
         return res.json({
             completed: false,
