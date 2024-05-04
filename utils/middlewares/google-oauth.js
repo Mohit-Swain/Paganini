@@ -1,20 +1,20 @@
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('../schema/user')
+const User = require('../schema/user');
 require('dotenv').config();
 
 exports.config = function () {
-    var url = '';
-    if(process.env.NODE_ENV === 'development'){
+    var url;
+    if (process.env.NODE_ENV === 'development') {
         url = "http://localhost:3000/oauth/google/callback";
     }
-    else if(process.env.NODE_ENV === 'production'){
-        url = "https://twello.herokuapp.com/oauth/google/callback";
+    else if (process.env.NODE_ENV === 'production') {
+        url = process.env.PROD_URL + "/oauth/google/callback";
     }
     return new GoogleStrategy({
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: url
-        },
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: url
+    },
         function (accessToken, refreshToken, profile, cb) {
             User.findOne({
                 googleId: profile.id
@@ -30,11 +30,11 @@ exports.config = function () {
                         cb(null, user);
                     }).catch(err => {
                         cb(err);
-                    });;
+                    });
                 }
             }).catch(err => {
                 cb(err);
             });
         }
-    )
-}
+    );
+};

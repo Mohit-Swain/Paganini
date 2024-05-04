@@ -29,7 +29,8 @@ function showServerErrors(err) {
     }
 }
 $(document).ready(function () {
-    $('#signIn').click(function (res) {
+    $('#signIn').click(function (event) {
+        event.preventDefault();
         let email = $('#Email').val() || '';
         let password = $('#Password').val();
         ErrorCount = 0;
@@ -60,19 +61,20 @@ $(document).ready(function () {
                 email: email,
                 password: password
             }),
-            redirect: 'follow'
+            redirect: 'manual'
         };
 
         fetch("/api/login", requestOptions)
             .then(response => response.json())
             .then(result => {
-                // console.log(result);
                 if (!result.completed) {
                     showServerErrors(result.errors);
                 } else {
                     window.location.replace("/");
                 }
             })
-            .catch(error => console.log('error ', error));
+            .catch(error => {
+                console.log(error);
+            });
     });
 });

@@ -1,11 +1,11 @@
-const express = require('express')
+const express = require('express');
 const userModel = require('../utils/schema/user');
 const mailRouter = express.Router();
 const sendMail = require('../utils/includes/sendmail');
 const crypto = require('crypto');
 require('dotenv').config();
-const mailjet = require ('node-mailjet')
-    .connect(process.env.NODEMAILER_USER, process.env.NODEMAILER_PASSWORD)
+const mailjet = require('node-mailjet')
+    .connect(process.env.MAILJET_API_KEY, process.env.MAILJET_API_SECRET);
 
 mailRouter.post('/api/send_message', function (req, res) {
     var name = req.body.name || "Guest";
@@ -19,7 +19,7 @@ mailRouter.post('/api/send_message', function (req, res) {
     }
     const msg = {
         to: 'swain6564@gmail.com',
-        from: 'TwelloHQ <118cs0219@nitrkl.com>',
+        from: 'TwelloHQ <mohit6564@gmail.com>',
         subject: 'You Got a new message from your twello app',
         text: JSON.stringify({
             name: name,
@@ -29,33 +29,40 @@ mailRouter.post('/api/send_message', function (req, res) {
         html: `From <strong>${name}</strong> <i>${email}</i><br>
                 Message: <blockquote>${message}</blockquote>`,
     };
-    mailjet.post("send", {'version': 'v3.1'})
-    .request({
-        "Messages":[{
-          "From": {
-              "Email": "118cs0219@nitrkl.ac.in",
-              "Name": "TwelloHQ"
-          },
-          "To": [{
-              "Email": msg.to,
-              "Name": "passenger 1"
-          }],
-          "Subject": msg.subject,
-          "TextPart": msg.text,
-          "HTMLPart": msg.html
-      }]
+    mailjet.post("send", { 'version': 'v3.1' })
+        .request({
+            "Messages": [{
+                "From": {
+                    "Email": "mohit6564@gmail.com",
+                    "Name": "TwelloHQ"
+                },
+                "To": [{
+                    "Email": msg.to,
+                    "Name": "passenger 1"
+                }],
+                "Subject": msg.subject,
+                "TextPart": msg.text,
+                "HTMLPart": msg.html
+            }]
 
-    }).then((result) => {
-        console.log(result.body)
-    })
-    .catch((err) => {
-        console.log(err.statusCode)
-    })
+        }).then((result) => {
+            console.log(result.body);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 
     return res.redirect('/');
 });
 
 mailRouter.post('/api/send_recovery_mail', function (req, res) {
+    var url = '';
+    if (process.env.NODE_ENV === 'development') {
+        url = "http://localhost:3000";
+    }
+    else if (process.env.NODE_ENV === 'production') {
+        url = process.env.PROD_URL;
+    }
     var email = req.body.email;
     if (!email) {
         return res.json({
@@ -88,12 +95,12 @@ mailRouter.post('/api/send_recovery_mail', function (req, res) {
             user.save();
             res.json({
                 completed: true
-            })
+            });
             const msg = {
                 to: email,
-                from: 'TwelloHQ <118cs0219@nitrkl.ac.in>',
+                from: 'TwelloHQ <mohit6564@gmail.com>',
                 subject: 'Password Reset Email for your twello account!',
-                text: `GoTo : http://localhost:3000/reset_password/${token}`,
+                text: `GoTo : ${url}/reset_password/${token}`,
                 html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
                 <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
                 
@@ -301,7 +308,7 @@ mailRouter.post('/api/send_recovery_mail', function (req, res) {
                               <tr>
                               <td align="center" bgcolor="#19c0d5" class="inner-td"
                               style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;">
-                              <a href="http://localhost:3000/reset_password/${token}"
+                              <a href="${url}/reset_password/${token}"
                               style="background-color:#19c0d5; border:0px solid #333333; border-color:#333333; border-radius:3px; border-width:0px; color:#ffffff; display:inline-block; font-size:14px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid; font-family:helvetica,sans-serif;"
                               target="_blank">Set a new Password</a>
                               </td>
@@ -403,23 +410,23 @@ mailRouter.post('/api/send_recovery_mail', function (req, res) {
                               
                               </html>`,
             };
-    mailjet.post("send", {'version': 'v3.1'})
-    .request({
-        "Messages":[{
-          "From": {
-              "Email": "118cs0219@nitrkl.ac.in",
-              "Name": "TwelloHQ"
-          },
-          "To": [{
-              "Email": msg.to,
-              "Name": "passenger 1"
-          }],
-          "Subject": msg.subject,
-          "TextPart": msg.text,
-          "HTMLPart": msg.html
-          }]
-        })
-      })
+            mailjet.post("send", { 'version': 'v3.1' })
+                .request({
+                    "Messages": [{
+                        "From": {
+                            "Email": "mohit6564@gmail.com",
+                            "Name": "TwelloHQ"
+                        },
+                        "To": [{
+                            "Email": msg.to,
+                            "Name": "passenger 1"
+                        }],
+                        "Subject": msg.subject,
+                        "TextPart": msg.text,
+                        "HTMLPart": msg.html
+                    }]
+                });
+        });
     }).catch(err => {
         return res.json({
             completed: false,

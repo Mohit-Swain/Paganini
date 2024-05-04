@@ -21,24 +21,24 @@ function showServerErrors(err) {
 function updateList() {
     work.forEach(function (job) {
         var span = $('<span />').addClass('close').text('\u00D7');
-        span.on('click',function () {
+        span.on('click', function () {
             $(this).parent().remove();
             $('#save').prop('disabled', false);
 
-        })
+        });
         var list = $('<li>' + job.name + '</li>');
         list.append(span);
         if (job.done) {
             list.addClass("checked");
         }
-        list.on('click',function () {
+        list.on('click', function () {
             $(this).toggleClass('checked');
             $('#save').prop('disabled', false);
         });
         $('#mytodo').append(list);
     });
 }
-$(function () {      
+$(function () {
     updateList();
     const urlParams = new URLSearchParams(window.location.search);
     const isNew = urlParams.get('new');
@@ -75,23 +75,23 @@ $(function () {
 
                     work = result.result.todo;
                     updateList();
-                    if(result.result.twitterPostId){
-                        twttr.ready((par) =>{
+                    if (result.result.twitterPostId) {
+                        twttr.ready((par) => {
                             twttr.widgets.createTweet(
                                 result.result.twitterPostId,
                                 document.getElementById('wjs'),
                                 {
-                                  align: 'center'
+                                    align: 'center'
                                 })
                                 .then(function (el) {
-                                  console.log("Tweet displayed.");
+                                    console.log("Tweet displayed.");
                                 });
                         });
                     }
-                    else{
-                        $('#wjs').html('<p class="text-center text-secondary">No tweets are made by this Todo List ('+ result.result.title +')<p>')
+                    else {
+                        $('#wjs').html('<p class="text-center text-secondary">No tweets are made by this Todo List (' + result.result.title + ')<p>');
                     }
-                    
+
 
                     // window.location.replace("/list");
                 }
@@ -103,25 +103,25 @@ $(function () {
 
 
     $('#save').prop('disabled', true);
-    $('#mytodo li').on('click',function () {
+    $('#mytodo li').on('click', function () {
         $(this).toggleClass('checked');
         $('#save').prop('disabled', false);
     });
 
-    $('.addBtn').on('click',function () {
+    $('.addBtn').on('click', function () {
         var value = $('#myInput').val();
-        if(value.length>80){
+        if (value.length > 80) {
             alert('The ToDo list can\'t have more than 80 chars');
             return;
         }
         if (value) {
             var span = $('<span />').addClass('close').text('\u00D7');
-            span.on('click',function () {
+            span.on('click', function () {
                 $(this).parent().remove();
-            })
+            });
             var list = $('<li>' + value + '</li>');
             list.append(span);
-            list.on('click',function () {
+            list.on('click', function () {
                 $(this).toggleClass('checked');
             });
 
@@ -133,17 +133,17 @@ $(function () {
 
 
 
-    $('#myInput').on('keypress',function (e) {
+    $('#myInput').on('keypress', function (e) {
         if (e.which === 13) {
             $('.addBtn').trigger('click');
         }
     });
 
-    $('#back').on('click',function () {
+    $('#back').on('click', function () {
         window.history.back();
-    })
+    });
 
-    $('#save').on('click',function () {
+    $('#save').on('click', function () {
         var new_work = [];
         var len = $('#mytodo').children().length;
         if (len == 0) {
@@ -208,8 +208,8 @@ $(function () {
             fetch("/todo/updateTodoById", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    
-                    if (result.completed === false) {    
+
+                    if (result.completed === false) {
                         showServerErrors(result.errors);
                         if (result.errorCode === 500) {
                             window.location.replace("/api/logout");
@@ -226,70 +226,69 @@ $(function () {
     });
 
     // Tweet
-    $('#tweetIt').on('click',function(Event){
+    $('#tweetIt').on('click', function (Event) {
         let id = urlParams.get('id');
-        if(!id){
+        if (!id) {
             alert('No Data Id found');
             return;
-        }     
+        }
 
-        if(!$('#save').prop('disabled')){
+        if (!$('#save').prop('disabled')) {
             alert('Your Updated ToDo is not Saved');
             return;
         }
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        var raw = JSON.stringify({"dataId":id});
+        var raw = JSON.stringify({ "dataId": id });
 
         var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
         };
 
         fetch("/todo/postToTwitter", requestOptions)
-        .then(response => response.json())
-        .then(result => {
+            .then(response => response.json())
+            .then(result => {
 
-            if(result.completed === true){
-                // ok
-                if(!result.result.tweetId) 
-                    return;
+                if (result.completed === true) {
+                    if (!result.result.tweetId)
+                        return;
 
-                $('#tweetIt').hide();
-                twttr.ready((par) =>{
-                    twttr.widgets.createTweet(
-                        result.result.tweetId,
-                        document.getElementById('wjs'),
-                        {
-                          align: 'center'
-                        })
-                        .then(function (el) {
-                          console.log("Tweet displayed.");
-                          $("html, body").animate({ scrollTop: $("#wjs").scrollTop() }, 500);
-                        });
-                });
+                    $('#tweetIt').hide();
+                    twttr.ready((par) => {
+                        twttr.widgets.createTweet(
+                            result.result.tweetId,
+                            document.getElementById('wjs'),
+                            {
+                                align: 'center'
+                            })
+                            .then(function (el) {
+                                console.log("Tweet displayed.");
+                                $("html, body").animate({ scrollTop: $("#wjs").scrollTop() }, 500);
+                            });
+                    });
 
-            }
-            else{
-                if(typeof result.errors[0] === 'object'){
-                    showServerErrors(result.errors[0].message);
-                    if (result.errors[0].statsCode === 401) {
-                        alert('Try reconnecting to your twitter account');
+                }
+                else {
+                    if (typeof result.errors[0] === 'object') {
+                        showServerErrors(result.errors[0].message);
+                        if (result.errors[0].statsCode === 401) {
+                            alert('Try reconnecting to your twitter account');
+                        }
+                    }
+                    else {
+                        showServerErrors(result.errors);
+                        if (result.errorCode === 500) {
+                            window.location.replace("/api/logout");
+                        }
                     }
                 }
-                else{
-                    showServerErrors(result.errors);
-                    if (result.errorCode === 500) {
-                        window.location.replace("/api/logout");
-                    }
-                }
-            }
-        })
-        .catch(error => {
-            showServerErrors(error);
-        });
+            })
+            .catch(error => {
+                showServerErrors(error);
+            });
     });
 });

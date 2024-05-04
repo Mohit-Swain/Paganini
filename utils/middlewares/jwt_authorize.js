@@ -25,14 +25,14 @@ exports.authorize = function (req, res, next) {
             }
         });
     }
-}
+};
 
-exports.twitterAuthorize = function(req,res,next){
-    if(!req.session.hasTwitter){
+exports.twitterAuthorize = function (req, res, next) {
+    if (!req.session.hasTwitter) {
         return res.json({
-            completed : false,
-            errors : ['Twitter handle not found! Please connect']
+            completed: false,
+            errors: ['Twitter handle not found! Please connect']
         });
     }
     next();
-}
+};

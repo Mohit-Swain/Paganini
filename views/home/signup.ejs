@@ -1,62 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Twello</title>
+		<%- include('../includes/head-top'); %>
+	</head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twello</title>
-    <%- include('../includes/head-top'); %>
-</head>
+	<body class="overflow-hidden">
+		<%- include('../includes/nav'); %>
+		<div class="global-container">
+			<div class="card login-form">
+				<div class="card-body">
+					<h3 class="card-title text-center">Register Twello</h3>
+					<div class="card-text">
+						<form>
+							<div class="form-group">
+								<input
+									type="text"
+									class="form-control"
+									id="name"
+									placeholder="Name"
+									autofocus
+								/>
+							</div>
+							<div class="form-group">
+								<input
+									type="email"
+									class="form-control"
+									id="email"
+									placeholder="Email"
+									autocomplete="off"
+								/>
+								<div
+									class="invalid-feedback"
+									id="email-feedback"
+								>
+									Client: Not a Valid Email
+								</div>
+							</div>
 
-<body class="overflow-hidden">
-    <%- include('../includes/nav'); %>
-    <div class="global-container">
-        <div class="card login-form">
-            <div class="card-body">
-                <h3 class="card-title text-center">Register Twello</h3>
-                <div class="card-text">
-                    <!-- <%# if(errors && errors.length > 0) { %>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">Incorrect username or
-                        password.</div>
-                    <form>
-                        <%# } %> -->
-                    <!-- to error: add class "has-danger" -->
+							<div class="form-group">
+								<input
+									type="password"
+									class="form-control"
+									id="password"
+									placeholder="Password"
+								/>
+								<div
+									class="invalid-feedback"
+									id="password-feedback"
+								>
+									Client: the password should hav at least 8
+									digits
+								</div>
+							</div>
 
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="name" placeholder="Name" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" id="email" placeholder="Email" autocomplete="off">
-                        <div class="invalid-feedback" id="email-feedback">Client: Not a Valid Email</div>
-                    </div>
+							<div class="form-group">
+								<input
+									type="password"
+									class="form-control"
+									id="confirm-password"
+									placeholder="confirm-password"
+								/>
+								<div
+									class="invalid-feedback"
+									id="confirm-password-feedback"
+								>
+									Client: the password doesn't match
+								</div>
+							</div>
 
-                    <div class="form-group">
-                        <input type="password" class="form-control" id="password" placeholder="Password">
-                        <div class="invalid-feedback" id="password-feedback">Client: the password should hav at least 8
-                            digits</div>
-                    </div>
+							<button
+								type="submit"
+								class="btn btn-primary btn-block"
+								id="signUp"
+							>
+								Create Account
+							</button>
+							<div class="text-center">
+								<small class="sign-up">
+									Already Have an account?
+									<a href="login">Login</a>
+								</small>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 
-                    <div class="form-group">
-                        <input type="password" class="form-control" id="confirm-password"
-                            placeholder="confirm-password">
-                        <div class="invalid-feedback" id="confirm-password-feedback">Client: the password doesn't match
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block" id="signUp">Create Account</button>
-                    <div class="text-center">
-                        <small class="sign-up">
-                            Already Have an account? <a href="login">Login</a>
-                        </small>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <%- include('../includes/head-down.ejs') %>
-    <script src="js/signup.js"></script>
-</body>
-
+		<%- include('../includes/head-down.ejs') %>
+		<script src="js/signup.js"></script>
+	</body>
 </html>

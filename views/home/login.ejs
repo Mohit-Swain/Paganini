@@ -1,67 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Twello</title>
+		<%- include('../includes/head-top'); %>
+	</head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twello</title>
-    <%- include('../includes/head-top'); %>
-</head>
+	<body>
+		<%- include('../includes/nav'); %>
+		<div class="global-container overflow-hidden">
+			<div class="card login-form">
+				<div class="card-body">
+					<h3 class="card-title text-center">Log in to Twello</h3>
+					<div class="card-text">
+						<form>
+							<div class="form-group">
+								<label for="Email">Email address</label>
+								<input
+									type="email"
+									class="form-control form-control-sm"
+									id="Email"
+									aria-describedby="emailHelp"
+									autofocus
+								/>
+								<div
+									class="invalid-feedback"
+									id="Email-feedback"
+								>
+									Client: the email should be valid
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="Password">Password</label>
+								<a
+									href="/forgot_password"
+									style="float: right; font-size: 12px"
+									>Forgot password?</a
+								>
+								<input
+									type="password"
+									class="form-control form-control-sm"
+									id="Password"
+								/>
+								<div
+									class="invalid-feedback"
+									id="Password-feedback"
+								>
+									Client: the password should hav at least 8
+									digits
+								</div>
+							</div>
+							<button
+								class="btn btn-primary btn-block ml-0"
+								id="signIn"
+							>
+								Log in
+							</button>
 
-<body>
-    <%- include('../includes/nav'); %>
-    <div class="global-container overflow-hidden">
-        <div class="card login-form">
-            <div class="card-body">
-                <h3 class="card-title text-center">Log in to Twello</h3>
-                <div class="card-text">
-                    <!-- <%# if(errors && errors.length > 0) { %>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">Incorrect username or
-                        password.</div>
-                    <form>
-                        <%# } %> -->
-                    <!-- to error: add class "has-danger" -->
-                    <div class="form-group">
-                        <label for="Email">Email address</label>
-                        <input type="email" class="form-control form-control-sm" id="Email" aria-describedby="emailHelp"
-                            autofocus>
-                        <div class="invalid-feedback" id="Email-feedback">Client: the email should be valid</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="Password">Password</label>
-                        <a href="/forgot_password" style="float:right;font-size:12px;">Forgot password?</a>
-                        <input type="password" class="form-control form-control-sm" id="Password">
-                        <div class="invalid-feedback" id="Password-feedback">Client: the password should hav at least 8
-                            digits</div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block ml-0" id="signIn">Sign in</button>
+							<div class="sign-up">
+								Don't have an account?
+								<a href="/signup">Create One</a>
+							</div>
+						</form>
+						<div id="or">
+							<h6><span>or</span></h6>
+						</div>
+						<div class="row">
+							<div class="mx-auto">
+								<a
+									class="btn btn-outline-dark"
+									href="/oauth/google"
+									role="button"
+									style="text-transform: none"
+								>
+									<img
+										width="20px"
+										style="
+											margin-bottom: 3px;
+											margin-right: 5px;
+										"
+										alt="Google sign-in"
+										src="https://developers.google.com/static/identity/images/g-logo.png"
+									/>
+									Login with Google
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-                    <div class="sign-up">
-                        Don't have an account? <a href="/signup">Create One</a>
-                    </div>
-                    </form>
-                    <div id="or">
-                        <h6><span>or</span></h6>
-                    </div>
-                    <div class="row">
-                        <div class="mx-auto">
-                            <a class="btn btn-outline-dark" href="/oauth/google" role="button"
-                                style="text-transform:none">
-                                <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in"
-                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
-                                Login with Google
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <%- include('../includes/head-down.ejs') %>
-    <script src="js/login.js"></script>
-</body>
-
+		<%- include('../includes/head-down.ejs') %>
+		<script src="js/login.js"></script>
+	</body>
 </html>

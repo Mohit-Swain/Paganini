@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-require('dotenv').config()
+require('dotenv').config();
 
 function sendMail(infoObj) {
   // Generate test SMTP service account from ethereal.email
@@ -25,10 +25,10 @@ function sendMail(infoObj) {
   //   text: "Hello world?", // plain text body
   //   html: "<b>Hello world?</b>", // html body
   // }
-  transporter.sendMail(infoObj,function (err,info) {
+  transporter.sendMail(infoObj, function (err, info) {
     console.log(process.env.NODEMAILER_USER);
     console.log(process.env.NODEMAILER_PASSWORD);
-    if(err){
+    if (err) {
       console.error(err);
     }
     console.log(info);
@@ -37,4 +37,4 @@ function sendMail(infoObj) {
   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 }
 
-module.exports = sendMail
+module.exports = sendMail;

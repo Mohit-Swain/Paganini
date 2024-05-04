@@ -6,11 +6,11 @@ const todoModel = require('../models/todos');
 
 exports.getTodo = function (req, res) {
     res.render('todo/main');
-}
+};
 
 exports.getList = function (req, res) {
     res.render('todo/list');
-}
+};
 
 exports.postAddList = function (req, res) {
     var title = req.body.title;
@@ -28,14 +28,14 @@ exports.postAddList = function (req, res) {
             return res.json({
                 completed: true,
                 result: result
-            })
+            });
         }).catch((err) => {
             return res.json({
                 completed: false,
                 errors: err
-            })
+            });
         });
-}
+};
 
 
 
@@ -54,21 +54,21 @@ exports.postList = function (req, res) {
         pageNo: pageNo,
         perPage: perPage,
         id: id
-    }
+    };
 
     todoModel.getDataList(obj)
         .then((result) => {
             return res.json({
                 completed: true,
                 result: result
-            })
+            });
         }).catch((err) => {
             return res.json({
                 completed: false,
                 errors: err
-            })
+            });
         });
-}
+};
 
 
 exports.postGetTodoById = function (req, res) {
@@ -84,14 +84,14 @@ exports.postGetTodoById = function (req, res) {
             return res.json({
                 completed: true,
                 result: result
-            })
+            });
         }).catch((err) => {
             return res.json({
                 completed: false,
                 errors: err
-            })
+            });
         });
-}
+};
 
 
 exports.putUpdateTodo = function (req, res) {
@@ -103,21 +103,21 @@ exports.putUpdateTodo = function (req, res) {
         id: id,
         todoId: todoId,
         new_todos: new_todos
-    }
+    };
 
     todoModel.updateById(obj)
         .then((result) => {
             return res.json({
                 completed: true,
                 result: result
-            })
+            });
         }).catch((err) => {
             return res.json({
                 completed: false,
                 errors: err
-            })
+            });
         });
-}
+};
 
 exports.deleteListById = function (req, res) {
     var listId = req.body.todoId;
@@ -125,57 +125,59 @@ exports.deleteListById = function (req, res) {
     var obj = {
         listId: listId,
         userId: id
-    }
+    };
 
     todoModel.deleteById(obj)
         .then((result) => {
             return res.json({
                 completed: true,
                 result: result
-            })
+            });
         }).catch((err) => {
             return res.json({
                 completed: false,
                 errors: err
-            })
+            });
         });
-}
+};
 
-exports.sendTweets = function(req,res){
+exports.sendTweets = function (req, res) {
     var dataId = req.body.dataId;
-    if(!dataId){
+    if (!dataId) {
         return res.json({
             completed: false,
             errors: ['Data Id not found']
         });
     }
-    else{
+    else {
 
-        if(!req.session.hasTwitter){
+        if (!req.session.hasTwitter) {
             return res.json({
                 completed: false,
                 errors: ['please connect twitter account']
-            })
+            });
         }
-        var accessToken =  req.session.twitter.accessToken;
+        var accessToken = req.session.twitter.accessToken;
         var refreshToken = req.session.twitter.refreshToken;
         var userName = req.session.twitter.userName;
-        if(!accessToken || !refreshToken){
+        if (!accessToken || !refreshToken) {
             return res.json({
                 completed: false,
                 errors: ['AcessToken not found, please reconnect twitter']
-            })
+            });
         }
-        twitterTweet.sendTweet(dataId,accessToken,refreshToken,userName).then((result) => {
+        twitterTweet.sendTweet(dataId, accessToken, refreshToken, userName).then((result) => {
+            console.log(result);
             return res.json({
-                completed : true,
-                result : result
-            })
+                completed: true,
+                result: result
+            });
         }).catch((err) => {
+            console.log(err);
             return res.json({
                 completed: false,
                 errors: err
-            })
+            });
         });
     }
-}
+};

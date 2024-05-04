@@ -79,6 +79,7 @@ $(document).ready(function () {
                 if (!result.completed) {
                     showServerErrors(result.errors);
                 } else {
+                    alert(result);
                     window.location.replace("/login");
                 }
             })

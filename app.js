@@ -10,7 +10,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
-require('dotenv').config()
+require('dotenv').config();
 
 
 const homeRouter = require(path.join(__dirname, '/routers', 'home'));
@@ -27,7 +27,7 @@ passport.use(twitter_oauth.config());
 const app = express();
 
 app.use(helmet({
-    contentSecurityPolicy : false
+    contentSecurityPolicy: false
 }));
 app.use(compression());
 
@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-var url = `mongodb+srv://mohit6564:${process.env.mongoPassword}@cluster0.r69uy.mongodb.net/${process.env.mongoDBName}?retryWrites=true&w=majority`;
+const url = `mongodb+srv://mohit6564:${process.env.MONGO_PASSWORD}@cluster0.ivdplz7.mongodb.net/`;
 
 app.use(session({
     secret: 'keyboard dog',
@@ -56,14 +56,14 @@ app.use(session({
 }));
 
 // Oauth
-const User = require(path.join(__dirname, '/utils', 'schema', 'user'))
+const User = require(path.join(__dirname, '/utils', 'schema', 'user'));
 passport.serializeUser(function (user, cb) {
     cb(null, user._id);
 });
 
 passport.deserializeUser(function (id, cb) {
     User.findById(mongoose.Types.ObjectId(id))
-        .select({email : 1,userName : 1 })
+        .select({ email: 1, userName: 1 })
         .then(user => cb(null, user))
         .catch(err => cb(err));
 });
@@ -76,18 +76,18 @@ app.use((req, res, next) => {
     if (!req.session.isLoggedIn) {
         req.session.isLoggedIn = false;
     }
-    
-    if(!req.session.hasTwitter){
+
+    if (!req.session.hasTwitter) {
         req.session.hasTwitter = false;
     }
     res.locals.isLoggedIn = req.session.isLoggedIn;
     res.locals.userName = req.session.name || "";
     res.locals.hasTwitter = req.session.hasTwitter;
     res.locals.twitterUserName = "";
-    if(req.session.hasTwitter && req.session.twitter)
+    if (req.session.hasTwitter && req.session.twitter)
         res.locals.twitterUserName = req.session.twitter.userName || "";
     next();
-})
+});
 
 app.use('/api', authRouter);
 app.use(oauthRouter);
@@ -96,12 +96,13 @@ app.use(profileRouter);
 app.use(mailChimpRouter);
 
 app.use((err, req, res, next) => {
+    console.log("app error" + err);
     if (err.statusCode === 500) {
         req.session.isLoggedIn = false;
     }
     res.send(err);
     next();
-})
+});
 const port = process.env.PORT || 3000;
 
 mongoose.connect(url, {

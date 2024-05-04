@@ -4,49 +4,56 @@ require('dotenv').config();
 
 
 exports.postLogin = function (req, res) {
-    var email = req.body.email
-    var password = req.body.password
-    return userModel.check({
-        email: email,
-        password: password
-    }).then((result) => {
-        // console.log(result);
-        req.session.isLoggedIn = true;
-        req.session.token = result.token;
-        req.session.name = result.name;
-        req.session.hasTwitter = (result.twitterAccountId ? true : false);
-        if(result.twitterAccountId){
-            return twitterModel.findById(result.twitterAccountId)
-            .then((twitInst) => {
-                if(twitInst){
-                    req.session.twitter = twitInst;
-                }
-                else{
-                    req.session.twitter = null;
-                }
-            })
-        }
-        else{
-            req.session.twitter = null;
-        }
-        return req.session.save()
-    }) .then(() =>{
-        return res.json({
-            completed: true,
-            result: 'login successful'
+    try {
+        var email = req.body.email;
+        var password = req.body.password;
+        return userModel.check({
+            email: email,
+            password: password
+        }).then((result) => {
+            req.session.isLoggedIn = true;
+            req.session.token = result.token;
+            req.session.name = result.name;
+            req.session.hasTwitter = (result.twitterAccountId ? true : false);
+            if (result.twitterAccountId) {
+                return twitterModel.findById(result.twitterAccountId)
+                    .then((twitInst) => {
+                        if (twitInst) {
+                            req.session.twitter = twitInst;
+                        }
+                        else {
+                            req.session.twitter = null;
+                        }
+                        return req.session.save();
+                    });
+            }
+            else {
+                req.session.twitter = null;
+                return req.session.save();
+            }
+        }).then(() => {
+            console.log("login successful");
+            return res.json({
+                completed: true,
+                result: 'login successful'
+            });
+        }).catch(err => {
+            console.log(err);
+            return res.json({
+                completed: false,
+                errors: err
+            });
         });
-    }).catch(err => {
-        return res.json({
-            completed: false,
-            errors : err
-        });
-    });
+    }
+    catch (err) {
+        console.error(err);
+    }
 };
 
 exports.postSignUp = function (req, res) {
-    var name = req.body.name
-    var email = req.body.email
-    var password = req.body.password
+    var name = req.body.name;
+    var email = req.body.email;
+    var password = req.body.password;
     return userModel.addUser({
         name: name,
         email: email,
@@ -59,23 +66,30 @@ exports.postSignUp = function (req, res) {
     }).catch(err => {
         return res.json({
             completed: false,
-            errors : err
+            errors: err
         });
     });
-}
+};
 
 
 exports.getLogOut = function (req, res) {
-    req.session.isLoggedIn = false;
-    req.logout();
-    req.session.name = null;
-    req.session.token = null;
-    req.session.hasTwitter = false;
-    req.session.twitter = null;
-    req.session.save(() =>{
-        res.redirect('/login');
-    })
-}
+    try {
+        req.session.isLoggedIn = false;
+        req.logout(() => {
+            console.log("logged out");
+            req.session.name = null;
+            req.session.token = null;
+            req.session.hasTwitter = false;
+            req.session.twitter = null;
+            req.session.save(() => {
+                res.redirect('/login');
+            });
+        });
+    } catch (err) {
+        console.error(err);
+    }
+
+};
 
 exports.putChangePassword = function (req, res) {
     var new_password = req.body.new_password;
@@ -91,11 +105,11 @@ exports.putChangePassword = function (req, res) {
             return res.json({
                 completed: true,
                 result: result
-            })
+            });
         }).catch(err => {
             return res.json({
                 completed: false,
-                errors : err
+                errors: err
             });
         });
-}
+};
